@@ -91,9 +91,14 @@ public class ArrayListProductDaoTest {
     @Test
     public void testSuccessfulExecutionGetProduct() {
         Long id = 1L;
+        BigDecimal price = new BigDecimal(1);
+        Integer stock = 1;
         Product product = mock(Product.class);
 
         when(product.getId()).thenReturn(id);
+        when(product.getPrice()).thenReturn(price);
+        when(product.getStock()).thenReturn(stock);
+
         productDao.save(product);
 
         Product expected = product;
