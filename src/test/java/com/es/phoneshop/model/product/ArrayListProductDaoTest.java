@@ -74,7 +74,7 @@ public class ArrayListProductDaoTest {
     @Test
     public void testGetProductNoResult() {
         Long realId = 1L;
-        Long failId = 0L;
+        Long failId = 10L;
         Product product = mock(Product.class);
 
         when(product.getId()).thenReturn(realId);
@@ -110,7 +110,7 @@ public class ArrayListProductDaoTest {
     @Test
     public void testDeleteProductNoResult() {
         Long realId = 1L;
-        Long failId = 0L;
+        Long failId = 10L;
         Product product = mock(Product.class);
 
         when(product.getId()).thenReturn(realId);
