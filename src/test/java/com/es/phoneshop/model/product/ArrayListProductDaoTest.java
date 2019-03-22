@@ -1,12 +1,12 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.model.product.exception.ProductNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -83,13 +83,13 @@ public class ArrayListProductDaoTest {
         try {
             productDao.getProduct(failId);
             fail("Expected NoSuchElementException.");
-        } catch (NoSuchElementException expected) {
+        } catch (ProductNotFoundException expected) {
             assertEquals(expected.getMessage(), failId.toString());
         }
     }
 
     @Test
-    public void testSuccessfulExecutionGetProduct() {
+    public void testSuccessfulExecutionGetProduct() throws ProductNotFoundException {
         Long id = 1L;
         BigDecimal price = new BigDecimal(1);
         Integer stock = 1;
@@ -119,13 +119,13 @@ public class ArrayListProductDaoTest {
         try {
             productDao.delete(failId);
             fail("Expected NoSuchElementException.");
-        } catch (NoSuchElementException expected) {
+        } catch (ProductNotFoundException expected) {
             assertEquals(expected.getMessage(), failId.toString());
         }
     }
 
     @Test
-    public void testSuccessfulExecutionDeleteProduct() {
+    public void testSuccessfulExecutionDeleteProduct() throws ProductNotFoundException {
         Long id = 1L;
         Product product = mock(Product.class);
 

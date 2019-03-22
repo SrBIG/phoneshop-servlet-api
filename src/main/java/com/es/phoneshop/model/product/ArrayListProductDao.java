@@ -1,8 +1,9 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.model.product.exception.ProductNotFoundException;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -11,14 +12,14 @@ public class ArrayListProductDao implements ProductDao {
     private List<Product> products = new ArrayList<>();
 
     @Override
-    public Product getProduct(Long id) throws NoSuchElementException, IllegalArgumentException {
+    public Product getProduct(Long id) throws ProductNotFoundException, IllegalArgumentException {
         checkId(id);
         return products
                 .stream()
                 .filter(product -> product.getId().equals(id))
                 .filter(isValidProduct())
                 .findAny()
-                .orElseThrow(() -> new NoSuchElementException(id.toString()));
+                .orElseThrow(() -> new ProductNotFoundException(id.toString()));
     }
 
     @Override
@@ -29,15 +30,18 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public void save(Product product) {
+    public void save(Product product) throws IllegalArgumentException {
+        if (Objects.isNull(product)){
+            throw new IllegalArgumentException("product cant be null");
+        }
         products.add(product);
     }
 
     @Override
-    public void delete(Long id) throws NoSuchElementException, IllegalArgumentException {
+    public void delete(Long id) throws IllegalArgumentException, ProductNotFoundException {
         checkId(id);
         if (!products.removeIf(product -> product.getId().equals(id))) {
-            throw new NoSuchElementException(id.toString());
+            throw new ProductNotFoundException(id.toString());
         }
     }
 
