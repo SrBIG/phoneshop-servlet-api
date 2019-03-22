@@ -7,7 +7,7 @@ import java.util.List;
 public interface ProductDao {
     Product getProduct(Long id) throws ProductNotFoundException, IllegalArgumentException;
 
-    List<Product> findProducts(String query);
+    List<Product> findProducts(String query, String sortBy, String order);
 
     void save(Product product) throws IllegalArgumentException;
 

@@ -21,36 +21,18 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    synchronized public List<Product> findProducts(String query) {
+    synchronized public List<Product> findProducts(String query, String sortBy, String order) {
+        List<Product> actualProducts;
         if (query == null || query.trim().length() == 0) {
-            return products.stream()
-                    .filter(isValidProduct())
-                    .collect(Collectors.toList());
+            actualProducts = findAllProducts();
+        } else {
+            actualProducts = findProductsByQuery(query);
         }
 
-        Map<Product, Integer> productsByQuery = new HashMap<>();
-        String[] queries = query.split("\\s");
-
-        products.forEach(product -> {
-            int actualLvl = 0;
-            for (String curQuery : queries) {
-                if (product.getDescription().contains(curQuery)){
-                    actualLvl++;
-                }
-            }
-            if (actualLvl > 0) {
-                productsByQuery.put(product, actualLvl);
-            }
-        });
-
-        List<Product> actualProducts  = productsByQuery
-                .entrySet()
-                .stream()
-                .sorted(Map.Entry.<Product, Integer>comparingByValue().reversed())
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-
-        return actualProducts;
+        if (sortBy == null || order == null) {
+            return actualProducts;
+        } else
+            return sort(actualProducts, sortBy, order);
     }
 
     @Override
@@ -77,5 +59,56 @@ public class ArrayListProductDao implements ProductDao {
         if (Objects.isNull(id) || id < 1) {
             throw new IllegalArgumentException("ID must be more 0");
         }
+    }
+
+    private List<Product> findAllProducts() {
+        return products.stream()
+                .filter(isValidProduct())
+                .collect(Collectors.toList());
+    }
+
+    private List<Product> findProductsByQuery(String query) {
+        Map<Product, Integer> productsByQuery = new HashMap<>();
+        String[] queries = query.split("\\s");
+
+        products.forEach(product -> {
+            int actualLvl = 0;
+            for (String curQuery : queries) {
+                if (product.getDescription().contains(curQuery)) {
+                    actualLvl++;
+                }
+            }
+            if (actualLvl > 0) {
+                productsByQuery.put(product, actualLvl);
+            }
+        });
+
+        return productsByQuery
+                .entrySet()
+                .stream()
+                .sorted(Map.Entry.<Product, Integer>comparingByValue().reversed())
+                .map(Map.Entry::getKey)
+                .filter(isValidProduct())
+                .collect(Collectors.toList());
+    }
+
+    private List<Product> sort(List<Product> actualProducts, String sortBy, String order){
+        if (sortBy.equals("description") && order.equals("asc")) {
+            return actualProducts.stream()
+                    .sorted(Comparator.comparing(Product::getDescription))
+                    .collect(Collectors.toList());
+        } else if (sortBy.equals("description") && order.equals("desc")) {
+            return actualProducts.stream()
+                    .sorted(Comparator.comparing(Product::getDescription).reversed())
+                    .collect(Collectors.toList());
+        } else if (sortBy.equals("price") && order.equals("asc")) {
+            return actualProducts.stream()
+                    .sorted(Comparator.comparing(Product::getPrice))
+                    .collect(Collectors.toList());
+        } else if (sortBy.equals("price") && order.equals("desc")) {
+            return actualProducts.stream()
+                    .sorted(Comparator.comparing(Product::getPrice).reversed())
+                    .collect(Collectors.toList());
+        } else return actualProducts;
     }
 }
