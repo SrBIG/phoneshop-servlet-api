@@ -7,10 +7,27 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ArrayListProductDao implements ProductDao {
-    private List<Product> products = new ArrayList<>();
+    private static ArrayListProductDao instance = new ArrayListProductDao();
+
+    public static ArrayListProductDao getInstance() {
+        if (instance == null) {
+            synchronized (ArrayListProductDao.class) {
+                if (instance == null) {
+                    instance = new ArrayListProductDao();
+                }
+            }
+        }
+        return instance;
+    }
+
+    private ArrayListProductDao() {
+        products = new ArrayList<>();
+    }
+
+    private List<Product> products;
 
     @Override
-    public Product getProduct(Long id) throws ProductNotFoundException, IllegalArgumentException {
+    synchronized public Product getProduct(Long id) throws ProductNotFoundException, IllegalArgumentException {
         checkId(id);
         return products
                 .stream()
@@ -23,6 +40,7 @@ public class ArrayListProductDao implements ProductDao {
     @Override
     synchronized public List<Product> findProducts(String query, String sortBy, String order) {
         List<Product> actualProducts;
+
         if (query == null || query.trim().length() == 0) {
             actualProducts = findAllProducts();
         } else {
@@ -31,12 +49,13 @@ public class ArrayListProductDao implements ProductDao {
 
         if (sortBy == null || order == null) {
             return actualProducts;
-        } else
+        } else {
             return sort(actualProducts, sortBy, order);
+        }
     }
 
     @Override
-    public void save(Product product) throws IllegalArgumentException {
+    synchronized public void save(Product product) throws IllegalArgumentException {
         if (Objects.isNull(product)) {
             throw new IllegalArgumentException("product cant be null");
         }
@@ -44,7 +63,7 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public void delete(Long id) throws IllegalArgumentException, ProductNotFoundException {
+    synchronized public void delete(Long id) throws IllegalArgumentException, ProductNotFoundException {
         checkId(id);
         if (!products.removeIf(product -> product.getId().equals(id))) {
             throw new ProductNotFoundException(id.toString());
@@ -92,7 +111,7 @@ public class ArrayListProductDao implements ProductDao {
                 .collect(Collectors.toList());
     }
 
-    private List<Product> sort(List<Product> actualProducts, String sortBy, String order){
+    private List<Product> sort(List<Product> actualProducts, String sortBy, String order) {
         if (sortBy.equals("description") && order.equals("asc")) {
             return actualProducts.stream()
                     .sorted(Comparator.comparing(Product::getDescription))

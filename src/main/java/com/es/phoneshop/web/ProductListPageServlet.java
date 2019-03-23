@@ -20,7 +20,7 @@ public class ProductListPageServlet extends HttpServlet {
 
     @Override
     public void init(ServletConfig config) {
-        productDao = new ArrayListProductDao();
+        productDao = ArrayListProductDao.getInstance();
         getSampleProducts().
                 forEach(product -> productDao.save(product));
     }
