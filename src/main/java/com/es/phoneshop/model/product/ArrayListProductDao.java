@@ -93,7 +93,7 @@ public class ArrayListProductDao implements ProductDao {
         products.forEach(product -> {
             int actualLvl = 0;
             for (String curQuery : queries) {
-                if (product.getDescription().contains(curQuery)) {
+                if (product.getDescription().toLowerCase().contains(curQuery.toLowerCase())) {
                     actualLvl++;
                 }
             }
