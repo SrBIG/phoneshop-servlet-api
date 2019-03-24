@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ProductDetailsPageServlet extends HttpServlet {
+    private final String PRODUCT = "product";
+    private final String ID = "id";
+
     private ProductDao productDao;
 
     @Override
@@ -23,9 +26,9 @@ public class ProductDetailsPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String id = request.getPathInfo().substring(1);
         try {
-            request.setAttribute("product", productDao.getProduct(Long.valueOf(id)));
+            request.setAttribute(PRODUCT, productDao.getProduct(Long.valueOf(id)));
         } catch (ProductNotFoundException e) {
-            request.setAttribute("id", id);
+            request.setAttribute(ID, id);
             throw new ServletException(e);
         }
         request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
