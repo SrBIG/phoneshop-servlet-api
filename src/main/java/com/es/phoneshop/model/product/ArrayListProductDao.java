@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ArrayListProductDao implements ProductDao {
-    private static ArrayListProductDao instance = new ArrayListProductDao();
+    private static ArrayListProductDao instance;
 
     public static ArrayListProductDao getInstance() {
         if (instance == null) {
@@ -75,7 +75,7 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     private void checkId(Long id) throws IllegalArgumentException {
-        if (Objects.isNull(id) || id < 1) {
+        if (Objects.isNull(id) || id < 1L) {
             throw new IllegalArgumentException("ID must be more 0");
         }
     }
@@ -93,7 +93,8 @@ public class ArrayListProductDao implements ProductDao {
         products.forEach(product -> {
             int actualLvl = 0;
             for (String curQuery : queries) {
-                if (product.getDescription().toLowerCase().contains(curQuery.toLowerCase())) {
+                if (product.getDescription() != null &&
+                        product.getDescription().toLowerCase().contains(curQuery.toLowerCase())) {
                     actualLvl++;
                 }
             }
