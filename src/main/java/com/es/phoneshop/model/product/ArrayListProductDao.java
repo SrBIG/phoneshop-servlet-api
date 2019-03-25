@@ -47,7 +47,7 @@ public class ArrayListProductDao implements ProductDao {
             actualProducts = findProductsByQuery(query);
         }
 
-        if (sortBy == null || order == null) {
+        if (sortBy == null || order == null || order.equals("default")) {
             return actualProducts;
         } else {
             return sort(actualProducts, sortBy, order);
@@ -88,7 +88,7 @@ public class ArrayListProductDao implements ProductDao {
 
     private List<Product> findProductsByQuery(String query) {
         Map<Product, Integer> productsByQuery = new HashMap<>();
-        String[] queries = query.split("\\s");
+        String[] queries = query.split("\\s+");
 
         products.forEach(product -> {
             int actualLvl = 0;
