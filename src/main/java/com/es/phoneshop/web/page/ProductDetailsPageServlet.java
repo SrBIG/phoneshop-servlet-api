@@ -15,7 +15,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private final String PRODUCT = "product";
     private final String ID = "id";
 
-    private ProductDao productDao;
+    protected ProductDao productDao;
 
     @Override
     public void init(ServletConfig config) {
