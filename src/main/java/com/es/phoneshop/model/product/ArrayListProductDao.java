@@ -27,13 +27,13 @@ public class ArrayListProductDao implements ProductDao {
     private List<Product> products;
 
     @Override
-    synchronized public Product getProduct(Long id) throws ProductNotFoundException, IllegalArgumentException {
+    synchronized public Product getProduct(long id) throws ProductNotFoundException, IllegalArgumentException {
         return products
                 .stream()
                 .filter(product -> product.getId().equals(id))
                 .filter(isValidProduct())
                 .findAny()
-                .orElseThrow(() -> new ProductNotFoundException(id.toString()));
+                .orElseThrow(() -> new ProductNotFoundException(String.valueOf(id)));
     }
 
     @Override
@@ -64,9 +64,9 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    synchronized public void delete(Long id) throws IllegalArgumentException, ProductNotFoundException {
+    synchronized public void delete(long id) throws IllegalArgumentException, ProductNotFoundException {
         if (!products.removeIf(product -> product.getId().equals(id))) {
-            throw new ProductNotFoundException(id.toString());
+            throw new ProductNotFoundException(String.valueOf(id));
         }
     }
 

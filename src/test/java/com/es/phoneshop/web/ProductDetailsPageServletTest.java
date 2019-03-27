@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,8 +28,6 @@ public class ProductDetailsPageServletTest {
     private HttpServletResponse response;
     @Mock
     private RequestDispatcher requestDispatcher;
-    @Mock
-    private ServletConfig servletConfig;
     @Mock
     private ArrayListProductDao productDao;
     @Mock

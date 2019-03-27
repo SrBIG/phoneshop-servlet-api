@@ -68,34 +68,19 @@ public class ArrayListProductDaoTest {
         productDao.save(notValidProduct);
     }
 
-    @Test
-    public void testGetProductByFailId() {
-        try {
-            productDao.getProduct(failId);
-            fail("Expected ProductNotFoundException.");
-        } catch (ProductNotFoundException expected) {
-            assertEquals(expected.getMessage(), failId.toString());
-        }
+    @Test(expected = ProductNotFoundException.class)
+    public void testGetProductByFailId() throws ProductNotFoundException {
+        productDao.getProduct(failId);
     }
 
-    @Test
+    @Test(expected = ProductNotFoundException.class)
     public void testGetProductByInvalidId() throws ProductNotFoundException {
-        try {
-            productDao.getProduct(null);
-            fail("Expected IllegalArgumentException.");
-        } catch (IllegalArgumentException expected) {
-            assertEquals(expected.getMessage(), "ID must be more 0");
-        }
+        productDao.getProduct(0);
     }
 
-    @Test
-    public void testGetNotValidProduct() {
-        try {
-            productDao.getProduct(notValidProductId);
-            fail("Expected ProductNotFoundException.");
-        } catch (ProductNotFoundException expected) {
-            assertEquals(expected.getMessage(), notValidProductId.toString());
-        }
+    @Test(expected = ProductNotFoundException.class)
+    public void testGetNotValidProduct() throws ProductNotFoundException {
+        productDao.getProduct(notValidProductId);
     }
 
     @Test
@@ -167,34 +152,19 @@ public class ArrayListProductDaoTest {
         assertEquals(expected, actual);
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testSaveNullProduct() {
-        try {
-            productDao.save(null);
-            fail("Expected IllegalArgumentException.");
-        } catch (IllegalArgumentException expected) {
-            assertEquals(expected.getMessage(), "product cant be null");
-        }
+        productDao.save(null);
     }
 
-    @Test
+    @Test(expected = ProductNotFoundException.class)
     public void testDeleteProductByInvalidId() throws ProductNotFoundException {
-        try {
-            productDao.getProduct(null);
-            fail("Expected IllegalArgumentException.");
-        } catch (IllegalArgumentException expected) {
-            assertEquals(expected.getMessage(), "ID must be more 0");
-        }
+        productDao.getProduct(0);
     }
 
-    @Test
-    public void testDeleteProductNoResult() {
-        try {
-            productDao.delete(failId);
-            fail("Expected ProductNotFoundException.");
-        } catch (ProductNotFoundException expected) {
-            assertEquals(expected.getMessage(), failId.toString());
-        }
+    @Test(expected = ProductNotFoundException.class)
+    public void testDeleteProductNoResult() throws ProductNotFoundException {
+        productDao.delete(failId);
     }
 
     @Test
