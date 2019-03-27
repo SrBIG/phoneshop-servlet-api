@@ -24,7 +24,7 @@ public class ProductListPageServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String query = request.getParameter(QUERY);
         String sortBy = request.getParameter(SORT_BY);
         String order = request.getParameter(ORDER);

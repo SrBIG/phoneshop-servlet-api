@@ -1,8 +1,11 @@
 package com.es.phoneshop.web;
 
 import com.es.phoneshop.web.page.ProductListPageServlet;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -14,24 +17,22 @@ import java.io.IOException;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ProductListPageServletTest {
-    private static HttpServletRequest request;
-    private static HttpServletResponse response;
-    private static RequestDispatcher requestDispatcher;
-    private static ServletConfig servletConfig;
-    private static ProductListPageServletForTest servlet;
+    @Mock
+    private HttpServletRequest request;
+    @Mock
+    private HttpServletResponse response;
+    @Mock
+    private RequestDispatcher requestDispatcher;
+    @Mock
+    private ServletConfig servletConfig;
 
-    @BeforeClass
-    public static void setup() {
-        servlet = new ProductListPageServletForTest();
+    private ProductListPageServlet servlet = new ProductListPageServlet();
 
-        request = mock(HttpServletRequest.class);
-        response = mock(HttpServletResponse.class);
-        requestDispatcher = mock(RequestDispatcher.class);
-        servletConfig = mock(ServletConfig.class);
-
+    @Before
+    public void setup() {
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
-
         servlet.init(servletConfig);
     }
 
@@ -42,10 +43,4 @@ public class ProductListPageServletTest {
         verify(requestDispatcher).forward(request, response);
     }
 
-    private static class ProductListPageServletForTest extends ProductListPageServlet {
-        @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            super.doGet(request, response);
-        }
-    }
 }
