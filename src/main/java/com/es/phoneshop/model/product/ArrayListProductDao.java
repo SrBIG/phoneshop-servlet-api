@@ -47,8 +47,10 @@ public class ArrayListProductDao implements ProductDao {
             actualProducts = findProductsByQuery(query);
         }
 
-        if (sortBy == null || order == null || order.equals("default")) {
+        if (sortBy == null || sortBy.trim().length() == 0) {
             return actualProducts;
+        } else if (order == null || order.trim().length() == 0) {
+            return sort(actualProducts, sortBy, "asc");
         } else {
             return sort(actualProducts, sortBy, order);
         }
@@ -90,45 +92,41 @@ public class ArrayListProductDao implements ProductDao {
         Map<Product, Integer> productsByQuery = new HashMap<>();
         String[] queries = query.split("\\s+");
 
-        products.forEach(product -> {
-            int actualLvl = 0;
-            for (String curQuery : queries) {
-                if (product.getDescription() != null &&
-                        product.getDescription().toLowerCase().contains(curQuery.toLowerCase())) {
-                    actualLvl++;
-                }
-            }
-            if (actualLvl > 0) {
-                productsByQuery.put(product, actualLvl);
-            }
-        });
+        products.stream()
+                .filter(isValidProduct())
+                .filter(product -> product.getDescription() != null)
+                .forEach(product -> {
+                    int actualLvl = (int) Arrays.stream(queries)
+                            .filter(curQuery -> product.getDescription().toLowerCase().contains(curQuery.toLowerCase()))
+                            .count();
+                    if (actualLvl > 0) {
+                        productsByQuery.put(product, actualLvl);
+                    }
+                });
 
         return productsByQuery
                 .entrySet()
                 .stream()
                 .sorted(Map.Entry.<Product, Integer>comparingByValue().reversed())
                 .map(Map.Entry::getKey)
-                .filter(isValidProduct())
                 .collect(Collectors.toList());
     }
 
     private List<Product> sort(List<Product> actualProducts, String sortBy, String order) {
+        Comparator<Product> comparator;
+
         if (sortBy.equals("description") && order.equals("asc")) {
-            return actualProducts.stream()
-                    .sorted(Comparator.comparing(Product::getDescription))
-                    .collect(Collectors.toList());
+            comparator = Comparator.comparing(Product::getDescription);
         } else if (sortBy.equals("description") && order.equals("desc")) {
-            return actualProducts.stream()
-                    .sorted(Comparator.comparing(Product::getDescription).reversed())
-                    .collect(Collectors.toList());
+            comparator = Comparator.comparing(Product::getDescription).reversed();
         } else if (sortBy.equals("price") && order.equals("asc")) {
-            return actualProducts.stream()
-                    .sorted(Comparator.comparing(Product::getPrice))
-                    .collect(Collectors.toList());
+            comparator = Comparator.comparing(Product::getPrice);
         } else if (sortBy.equals("price") && order.equals("desc")) {
-            return actualProducts.stream()
-                    .sorted(Comparator.comparing(Product::getPrice).reversed())
-                    .collect(Collectors.toList());
+            comparator = Comparator.comparing(Product::getPrice).reversed();
         } else return actualProducts;
+
+        return actualProducts.stream()
+                .sorted(comparator)
+                .collect(Collectors.toList());
     }
 }
