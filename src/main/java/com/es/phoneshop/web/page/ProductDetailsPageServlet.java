@@ -26,11 +26,11 @@ public class ProductDetailsPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String id = request.getPathInfo().substring(1);
         try {
-            request.setAttribute(PRODUCT, productDao.getProduct(Long.valueOf(id)));
-        } catch (ProductNotFoundException e) {
+            request.setAttribute(PRODUCT, productDao.getProduct(Long.parseLong(id, 10)));
+            request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
+        } catch (ProductNotFoundException | NumberFormatException exception) {
             request.setAttribute(ID, id);
-            throw new ServletException(e);
+            response.sendError(404, "product not found");
         }
-        request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
     }
 }

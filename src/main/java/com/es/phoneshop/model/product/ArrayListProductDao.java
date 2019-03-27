@@ -28,7 +28,6 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     synchronized public Product getProduct(Long id) throws ProductNotFoundException, IllegalArgumentException {
-        checkId(id);
         return products
                 .stream()
                 .filter(product -> product.getId().equals(id))
@@ -66,7 +65,6 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     synchronized public void delete(Long id) throws IllegalArgumentException, ProductNotFoundException {
-        checkId(id);
         if (!products.removeIf(product -> product.getId().equals(id))) {
             throw new ProductNotFoundException(id.toString());
         }
@@ -74,12 +72,6 @@ public class ArrayListProductDao implements ProductDao {
 
     private Predicate<Product> isValidProduct() {
         return product -> null != product.getPrice() && product.getStock() > 0;
-    }
-
-    private void checkId(Long id) throws IllegalArgumentException {
-        if (Objects.isNull(id) || id < 1L) {
-            throw new IllegalArgumentException("ID must be more 0");
-        }
     }
 
     private List<Product> findAllProducts() {
