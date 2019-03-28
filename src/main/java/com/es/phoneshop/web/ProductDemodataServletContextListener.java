@@ -4,31 +4,24 @@ import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
 import java.util.List;
 
-public class ProductListPageServlet extends HttpServlet {
-    private ProductDao productDao;
+public class ProductDemodataServletContextListener implements ServletContextListener {
 
     @Override
-    public void init(ServletConfig config) {
-        productDao = new ArrayListProductDao();
-        getSampleProducts().
-                forEach(product -> productDao.save(product));
+    public void contextInitialized(ServletContextEvent servletContextEvent) {
+        ProductDao productDao = ArrayListProductDao.getInstance();
+        getSampleProducts().forEach(productDao::save);
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("products", productDao.findProducts());
-        request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+
     }
 
     private List<Product> getSampleProducts() {
