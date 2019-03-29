@@ -14,5 +14,23 @@
         Price: <fmt:formatNumber value="${product.price}" type="currency"
                                  currencySymbol="${product.currency.symbol}"/>
     </p>
-
+    <p>
+        Stock: ${product.stock}
+    </p>
+    <form method="post" action="${pageContext.servletContext.contextPath}/products/${product.id}">
+        <p>
+            <input type="number" name="quantity" value="${not empty param.quantity ? param.quantity : 1}">
+            <button>Add to cart</button>
+            <c:if test="${not empty error}">
+                <span class="error">
+                        <br>${error}
+                </span>
+            </c:if>
+            <c:if test="${not empty param.message}">
+                <span class="success">
+                    <br>${param.message}
+                </span>
+            </c:if>
+        </p>
+    </form>
 </tags:master>
