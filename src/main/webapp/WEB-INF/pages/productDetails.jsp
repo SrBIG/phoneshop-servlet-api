@@ -19,7 +19,7 @@
     </p>
     <form method="post" action="${pageContext.servletContext.contextPath}/products/${product.id}">
         <p>
-            <input type="number" name="quantity" value="${not empty param.quantity ? param.quantity : 1}">
+            <input type="number" min="1" max="${product.stock}" name="quantity" value="${not empty param.quantity ? param.quantity : 1}">
             <button>Add to cart</button>
             <c:if test="${not empty error}">
                 <span class="error">

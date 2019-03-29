@@ -65,6 +65,10 @@ public class ProductDetailsPageServlet extends HttpServlet {
             request.setAttribute(ERROR, e.getMessage());
             doGet(request, response);
             return;
+        } catch (NumberFormatException e) {
+            request.setAttribute(ERROR, e.getMessage());
+            doGet(request, response);
+            return;
         }
         response.sendRedirect(request.getRequestURI() + "?message=Added successfully&" + QUANTITY + "=" + quantity);
     }

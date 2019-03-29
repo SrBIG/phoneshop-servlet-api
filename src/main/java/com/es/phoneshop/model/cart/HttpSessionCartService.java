@@ -38,7 +38,10 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void add(Cart cart, long productId, int quantity) throws ProductNotFoundException, OutOfStockException {
+    public void add(Cart cart, long productId, int quantity) throws ProductNotFoundException, OutOfStockException, NumberFormatException {
+        if (quantity < 1){
+            throw new NumberFormatException("Quantity must be more 0");
+        }
         Product product = ArrayListProductDao.getInstance().getProduct(productId);
         if (quantity > product.getStock()) {
             throw new OutOfStockException("Not enough stock. Product stock is " + product.getStock());
