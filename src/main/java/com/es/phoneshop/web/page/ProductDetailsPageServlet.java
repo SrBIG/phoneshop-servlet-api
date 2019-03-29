@@ -1,5 +1,6 @@
 package com.es.phoneshop.web.page;
 
+import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.HttpSessionCartService;
 import com.es.phoneshop.model.cart.exception.OutOfStockException;
@@ -15,8 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class ProductDetailsPageServlet extends HttpServlet {
-    private final String PRODUCT = "product";
-    private final String ID = "id";
+    private static final String PRODUCT = "product";
+    private static final String ID = "id";
+    private static final String ERROR = "error";
+    private static final String QUANTITY = "quantity";
 
     protected ProductDao productDao;
     private CartService cartService;
@@ -45,24 +48,25 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
         try {
             id = getProductId(request);
-            quantity = Integer.parseInt(request.getParameter("quantity"));
+            quantity = Integer.parseInt(request.getParameter(QUANTITY));
         } catch (NumberFormatException exception) {
-            request.setAttribute("error", "Not a number");
+            request.setAttribute(ERROR, "Not a number");
             doGet(request, response);
             return;
         }
+        Cart cart = cartService.getCart(request);
         try {
-            cartService.add(id, quantity);
+            cartService.add(cart, id, quantity);
         } catch (ProductNotFoundException e) {
             response.sendError(404, "product not found");
             doGet(request, response);
             return;
         } catch (OutOfStockException e) {
-            request.setAttribute("error", e.getMessage());
+            request.setAttribute(ERROR, e.getMessage());
             doGet(request, response);
             return;
         }
-        response.sendRedirect(request.getRequestURI() + "?message=Added successfully&quantity=" + quantity);
+        response.sendRedirect(request.getRequestURI() + "?message=Added successfully&" + QUANTITY + "=" + quantity);
     }
 
     private long getProductId(HttpServletRequest request) throws NumberFormatException {
