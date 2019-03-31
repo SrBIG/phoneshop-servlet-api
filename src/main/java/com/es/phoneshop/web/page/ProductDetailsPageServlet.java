@@ -5,6 +5,7 @@ import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.HttpSessionCartService;
 import com.es.phoneshop.model.cart.exception.OutOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
 import com.es.phoneshop.model.product.exception.ProductNotFoundException;
 
@@ -13,15 +14,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductDetailsPageServlet extends HttpServlet {
     private static final String PRODUCT = "product";
     private static final String ID = "id";
     private static final String ERROR = "error";
     private static final String QUANTITY = "quantity";
+    private static final String RECENTLY_VIEWED = "recentlyViewed";
+    private static final Integer RECENTLY_VIEWED_SIZE = 3;
 
-    protected ProductDao productDao;
+    private ProductDao productDao;
     private CartService cartService;
 
     @Override
@@ -34,7 +40,9 @@ public class ProductDetailsPageServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             long id = getProductId(request);
-            request.setAttribute(PRODUCT, productDao.getProduct(id));
+            Product product = productDao.getProduct(id);
+            addToRecentlyViewed(request, product);
+            request.setAttribute(PRODUCT, product);
             request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
         } catch (ProductNotFoundException | NumberFormatException exception) {
             response.sendError(404, "Product not found");
@@ -61,11 +69,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
             response.sendError(404, "product not found");
             doGet(request, response);
             return;
-        } catch (OutOfStockException e) {
-            request.setAttribute(ERROR, e.getMessage());
-            doGet(request, response);
-            return;
-        } catch (NumberFormatException e) {
+        } catch (OutOfStockException | NumberFormatException e) {
             request.setAttribute(ERROR, e.getMessage());
             doGet(request, response);
             return;
@@ -76,5 +80,21 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private long getProductId(HttpServletRequest request) throws NumberFormatException {
         String id = request.getPathInfo().substring(1);
         return Long.parseLong(id);
+    }
+
+    private void addToRecentlyViewed(HttpServletRequest request, Product product) {
+        HttpSession session = request.getSession();
+        List<Product> recentlyViewed = (List<Product>) session.getAttribute(RECENTLY_VIEWED);
+        if (recentlyViewed == null) {
+            recentlyViewed = new ArrayList<>();
+            session.setAttribute(RECENTLY_VIEWED, recentlyViewed);
+        }
+        if (recentlyViewed.contains(product)) {
+            return;
+        }
+        if (recentlyViewed.size() >= RECENTLY_VIEWED_SIZE) {
+            recentlyViewed.remove(0);
+        }
+        recentlyViewed.add(product);
     }
 }
