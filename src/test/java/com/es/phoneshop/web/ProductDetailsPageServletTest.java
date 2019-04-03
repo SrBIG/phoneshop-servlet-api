@@ -54,6 +54,6 @@ public class ProductDetailsPageServletTest {
     public void testProductNotFound() throws IOException, ProductNotFoundException, ServletException {
         when(productDao.getProduct(anyLong())).thenThrow(new ProductNotFoundException());
         servlet.doGet(request, response);
-        verify(response).sendError(404, "product not found");
+        verify(response).sendError(404, "Product not found");
     }
 }

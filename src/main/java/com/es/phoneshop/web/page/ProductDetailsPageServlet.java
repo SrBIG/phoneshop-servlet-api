@@ -53,23 +53,20 @@ public class ProductDetailsPageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         long id;
         Integer quantity;
-
         try {
             id = getProductId(request);
             quantity = Integer.parseInt(request.getParameter(QUANTITY));
-        } catch (NumberFormatException exception) {
-            request.setAttribute(ERROR, "Not a number");
-            doGet(request, response);
-            return;
-        }
-        Cart cart = cartService.getCart(request);
-        try {
+            Cart cart = cartService.getCart(request);
             cartService.add(cart, id, quantity);
         } catch (ProductNotFoundException e) {
-            response.sendError(404, "product not found");
+            response.sendError(404, "Product not found");
             doGet(request, response);
             return;
-        } catch (OutOfStockException | NumberFormatException e) {
+        } catch (NumberFormatException e) {
+            response.sendError(404, "Not a number");
+            doGet(request, response);
+            return;
+        } catch (OutOfStockException | IllegalArgumentException e) {
             request.setAttribute(ERROR, e.getMessage());
             doGet(request, response);
             return;
