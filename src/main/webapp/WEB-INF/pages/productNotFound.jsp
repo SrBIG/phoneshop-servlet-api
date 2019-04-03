@@ -3,8 +3,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="tags" tagdir="/WEB-INF/tags" %>
 
-<jsp:useBean id="id" type="java.lang.String" scope="request"/>
-
 <html>
 <head>
     <title>Error page</title>
@@ -14,6 +12,6 @@
 <header>
     <h2>Error 404: NotFound</h2>
 </header>
-<p>Product with id ${id} not found</p>
+<p>${error}</p>
 </body>
 </html>
