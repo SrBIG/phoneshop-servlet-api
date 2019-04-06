@@ -6,7 +6,7 @@ import com.es.phoneshop.model.product.Product;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 public class Cart {
     private List<CartItem> cartItems;
@@ -22,21 +22,36 @@ public class Cart {
         if (quantity > product.getStock()) {
             throw new OutOfStockException("Not enough stock. Product stock is " + product.getStock());
         }
-        Optional<CartItem> cartItemOptional = cartItems.stream()
-                .filter(item -> product.getId().equals(item.getProduct().getId()))
-                .findAny();
-        if (cartItemOptional.isPresent()) {
-            CartItem cartItem = cartItemOptional.get();
+        CartItem cartItem = findCartItemByProduct(product);
+        if (Objects.nonNull(cartItem)) {
             if (cartItem.getQuantity() + quantity > product.getStock()) {
                 throw new OutOfStockException("Not enough stock. Product stock is " + product.getStock());
             } else {
                 cartItem.setQuantity(cartItem.getQuantity() + quantity);
             }
         } else {
-            CartItem cartItem = new CartItem(product, quantity);
+            cartItem = new CartItem(product, quantity);
             cartItems.add(cartItem);
         }
         recalculateTotal();
+    }
+
+    public void update(Product product, int quantity) throws OutOfStockException {
+        if (quantity > product.getStock()) {
+            throw new OutOfStockException("Not enough stock. Product stock is " + product.getStock());
+        }
+        CartItem cartItem = findCartItemByProduct(product);
+        if (Objects.nonNull(cartItem)){
+            cartItem.setQuantity(quantity);
+        }
+        recalculateTotal();
+    }
+
+    private CartItem findCartItemByProduct(Product product){
+        return cartItems.stream()
+                .filter(item -> product.getId().equals(item.getProduct().getId()))
+                .findAny()
+                .orElse(null);
     }
 
     private void recalculateTotal() {

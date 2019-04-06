@@ -8,4 +8,5 @@ import javax.servlet.http.HttpServletRequest;
 public interface CartService {
     void add(Cart cart, long productId, int quantity) throws ProductNotFoundException, OutOfStockException, NumberFormatException;
     Cart getCart(HttpServletRequest request);
+    void update(Cart cart, long productId, int quantity) throws ProductNotFoundException, OutOfStockException, IllegalArgumentException;
 }
