@@ -45,14 +45,20 @@ public class HttpSessionCartService implements CartService {
     }
 
     @Override
-    public void update(Cart cart, long productId, int quantity) throws ProductNotFoundException, OutOfStockException, IllegalArgumentException{
+    public void update(Cart cart, long productId, int quantity) throws ProductNotFoundException, OutOfStockException, IllegalArgumentException {
         checkQuantity(quantity);
         Product product = ArrayListProductDao.getInstance().getProduct(productId);
         cart.update(product, quantity);
     }
 
-    private void checkQuantity(int quantity) throws IllegalArgumentException{
-        if (quantity < 1){
+    @Override
+    public void delete(Cart cart, long productId) throws ProductNotFoundException {
+        Product product = ArrayListProductDao.getInstance().getProduct(productId);
+        cart.delete(product);
+    }
+
+    private void checkQuantity(int quantity) throws IllegalArgumentException {
+        if (quantity < 1) {
             throw new IllegalArgumentException("Quantity must be more 0");
         }
     }

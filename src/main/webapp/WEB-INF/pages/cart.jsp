@@ -10,6 +10,9 @@
     <c:if test="${not empty errors}">
         <p class="error">Error updating cart</p>
     </c:if>
+
+    <p class="success">${param.message}</p>
+
     <c:if test="${empty cart || cart.totalQuantity <= 0}">
         Cart is empty!
     </c:if>
@@ -46,6 +49,11 @@
                         <td class="price">
                             <fmt:formatNumber value="${product.price}" type="currency"
                                               currencySymbol="${product.currency.symbol}"/>
+                        </td>
+                        <td>
+                            <button formaction="${pageContext.servletContext.contextPath}/cart/deleteItem/${product.id}">
+                                Delete
+                            </button>
                         </td>
                     </tr>
                 </c:forEach>

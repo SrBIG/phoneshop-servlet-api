@@ -41,13 +41,18 @@ public class Cart {
             throw new OutOfStockException("Not enough stock. Product stock is " + product.getStock());
         }
         CartItem cartItem = findCartItemByProduct(product);
-        if (Objects.nonNull(cartItem)){
+        if (Objects.nonNull(cartItem)) {
             cartItem.setQuantity(quantity);
+            recalculateTotal();
         }
+    }
+
+    public void delete(Product product) {
+        cartItems.removeIf(cartItem -> cartItem.getProduct().getId().equals(product.getId()));
         recalculateTotal();
     }
 
-    private CartItem findCartItemByProduct(Product product){
+    private CartItem findCartItemByProduct(Product product) {
         return cartItems.stream()
                 .filter(item -> product.getId().equals(item.getProduct().getId()))
                 .findAny()
