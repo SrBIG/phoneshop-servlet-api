@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class HttpSessionCartService implements CartService {
-    private static final String SESSION_CART = "cart";
+    public static final String SESSION_CART = "cart";
     private static CartService instance;
 
     private HttpSessionCartService() {
