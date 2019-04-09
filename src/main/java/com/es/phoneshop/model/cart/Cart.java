@@ -6,7 +6,7 @@ import com.es.phoneshop.model.product.Product;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 public class Cart {
     private List<CartItem> cartItems;
@@ -19,11 +19,12 @@ public class Cart {
     }
 
     public void addItem(Product product, int quantity) throws OutOfStockException {
-        if (quantity > product.getStock()) {
-            throw new OutOfStockException("Not enough stock. Product stock is " + product.getStock());
-        }
-        CartItem cartItem = findCartItemByProduct(product);
-        if (Objects.nonNull(cartItem)) {
+        checkStock(product, quantity);
+
+        Optional<CartItem> cartItemOptional = findCartItemByProduct(product);
+        CartItem cartItem;
+        if (cartItemOptional.isPresent()) {
+            cartItem = cartItemOptional.get();
             if (cartItem.getQuantity() + quantity > product.getStock()) {
                 throw new OutOfStockException("Not enough stock. Product stock is " + product.getStock());
             } else {
@@ -37,11 +38,11 @@ public class Cart {
     }
 
     public void update(Product product, int quantity) throws OutOfStockException {
-        if (quantity > product.getStock()) {
-            throw new OutOfStockException("Not enough stock. Product stock is " + product.getStock());
-        }
-        CartItem cartItem = findCartItemByProduct(product);
-        if (Objects.nonNull(cartItem)) {
+        checkStock(product, quantity);
+
+        Optional<CartItem> cartItemOptional = findCartItemByProduct(product);
+        if (cartItemOptional.isPresent()) {
+            CartItem cartItem = cartItemOptional.get();
             cartItem.setQuantity(quantity);
             recalculateTotal();
         }
@@ -52,11 +53,16 @@ public class Cart {
         recalculateTotal();
     }
 
-    private CartItem findCartItemByProduct(Product product) {
+    private void checkStock(Product product, int quantity) throws OutOfStockException {
+        if (quantity > product.getStock()) {
+            throw new OutOfStockException("Not enough stock. Product stock is " + product.getStock());
+        }
+    }
+
+    private Optional<CartItem> findCartItemByProduct(Product product) {
         return cartItems.stream()
                 .filter(item -> product.getId().equals(item.getProduct().getId()))
-                .findAny()
-                .orElse(null);
+                .findAny();
     }
 
     private void recalculateTotal() {
