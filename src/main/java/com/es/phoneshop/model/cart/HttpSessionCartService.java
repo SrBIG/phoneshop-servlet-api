@@ -3,6 +3,7 @@ package com.es.phoneshop.model.cart;
 import com.es.phoneshop.model.cart.exception.OutOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.ProductDao;
 import com.es.phoneshop.model.product.exception.ProductNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,8 +12,10 @@ import javax.servlet.http.HttpSession;
 public class HttpSessionCartService implements CartService {
     public static final String SESSION_CART = "cart";
     private static CartService instance;
+    private ProductDao productDao;
 
     private HttpSessionCartService() {
+        productDao = ArrayListProductDao.getInstance();
     }
 
     public static CartService getInstance() {
@@ -40,20 +43,20 @@ public class HttpSessionCartService implements CartService {
     @Override
     public void add(Cart cart, long productId, int quantity) throws ProductNotFoundException, OutOfStockException, IllegalArgumentException {
         checkQuantity(quantity);
-        Product product = ArrayListProductDao.getInstance().getProduct(productId);
+        Product product = productDao.getProduct(productId);
         cart.addItem(product, quantity);
     }
 
     @Override
     public void update(Cart cart, long productId, int quantity) throws ProductNotFoundException, OutOfStockException, IllegalArgumentException {
         checkQuantity(quantity);
-        Product product = ArrayListProductDao.getInstance().getProduct(productId);
+        Product product = productDao.getProduct(productId);
         cart.update(product, quantity);
     }
 
     @Override
     public void delete(Cart cart, long productId) throws ProductNotFoundException {
-        Product product = ArrayListProductDao.getInstance().getProduct(productId);
+        Product product = productDao.getProduct(productId);
         cart.delete(product);
     }
 

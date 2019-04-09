@@ -60,10 +60,9 @@ public class ProductDetailsPageServlet extends HttpServlet {
             cartService.add(cart, id, quantity);
         } catch (ProductNotFoundException e) {
             response.sendError(404, "Product not found");
-            doGet(request, response);
             return;
         } catch (NumberFormatException e) {
-            response.sendError(404, "Not a number");
+            request.setAttribute(ERROR, "Not a number");
             doGet(request, response);
             return;
         } catch (OutOfStockException | IllegalArgumentException e) {

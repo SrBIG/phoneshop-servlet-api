@@ -21,7 +21,7 @@ public class MiniCartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Cart cart = cartService.getCart(request);
-        request.setAttribute("cart", cart);
+        request.getSession().setAttribute("cart", cart);
         request.getRequestDispatcher("/WEB-INF/fragments/minicart.jsp").include(request, response);
     }
 }
