@@ -1,6 +1,7 @@
 package com.es.phoneshop.model.product;
 
 import com.es.phoneshop.model.product.exception.ProductNotFoundException;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -8,7 +9,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -66,6 +68,13 @@ public class ArrayListProductDaoTest {
         when(notValidProduct.getPrice()).thenReturn(notValidProductPrice);
         when(notValidProduct.getStock()).thenReturn(notValidProductStock);
         productDao.save(notValidProduct);
+    }
+
+    @AfterClass
+    public static void destroyClass() throws ProductNotFoundException {
+        productDao.delete(realId);
+        productDao.delete(product1Id);
+        productDao.delete(notValidProductId);
     }
 
     @Test(expected = ProductNotFoundException.class)

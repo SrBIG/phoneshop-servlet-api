@@ -3,16 +3,19 @@ package com.es.phoneshop.model.cart;
 import com.es.phoneshop.model.cart.exception.OutOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.ProductDao;
 import com.es.phoneshop.model.product.exception.ProductNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class HttpSessionCartService implements CartService {
-    private static final String SESSION_CART = "sessionCat";
+    public static final String SESSION_CART = "cart";
     private static CartService instance;
+    private ProductDao productDao;
 
     private HttpSessionCartService() {
+        productDao = ArrayListProductDao.getInstance();
     }
 
     public static CartService getInstance() {
@@ -39,10 +42,27 @@ public class HttpSessionCartService implements CartService {
 
     @Override
     public void add(Cart cart, long productId, int quantity) throws ProductNotFoundException, OutOfStockException, IllegalArgumentException {
-        if (quantity < 1){
+        checkQuantity(quantity);
+        Product product = productDao.getProduct(productId);
+        cart.addItem(product, quantity);
+    }
+
+    @Override
+    public void update(Cart cart, long productId, int quantity) throws ProductNotFoundException, OutOfStockException, IllegalArgumentException {
+        checkQuantity(quantity);
+        Product product = productDao.getProduct(productId);
+        cart.update(product, quantity);
+    }
+
+    @Override
+    public void delete(Cart cart, long productId) throws ProductNotFoundException {
+        Product product = productDao.getProduct(productId);
+        cart.delete(product);
+    }
+
+    private void checkQuantity(int quantity) throws IllegalArgumentException {
+        if (quantity < 1) {
             throw new IllegalArgumentException("Quantity must be more 0");
         }
-        Product product = ArrayListProductDao.getInstance().getProduct(productId);
-        cart.addItem(product, quantity);
     }
 }
