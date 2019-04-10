@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -43,13 +42,13 @@ public class DeleteItemServletTest {
     }
 
     @Test
-    public void testDoPost() throws ServletException, IOException {
+    public void testDoPost() throws IOException {
         servlet.doPost(request, response);
         verify(response).sendRedirect(anyString());
     }
 
     @Test
-    public void testDoPostBadId() throws ServletException, IOException {
+    public void testDoPostBadId() throws IOException {
         when(request.getPathInfo()).thenReturn(badPathInfo);
         servlet.doPost(request, response);
         verify(response).sendError(eq(404), anyString());

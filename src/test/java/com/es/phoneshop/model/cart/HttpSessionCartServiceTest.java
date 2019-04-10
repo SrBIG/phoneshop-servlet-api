@@ -15,7 +15,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import java.math.BigDecimal;
 
 import static com.es.phoneshop.model.cart.HttpSessionCartService.SESSION_CART;

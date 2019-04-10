@@ -14,7 +14,7 @@ public class MiniCartServlet extends HttpServlet {
     private CartService cartService;
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         cartService = HttpSessionCartService.getInstance();
     }
 

@@ -22,8 +22,8 @@ import java.util.List;
 public class ProductDetailsPageServlet extends HttpServlet {
     private static final String PRODUCT = "product";
     private static final String ID = "id";
-    private static final String ERROR = "error";
-    private static final String QUANTITY = "quantity";
+    public static final String ERROR = "error";
+    public static final String QUANTITY = "quantity";
     private static final String RECENTLY_VIEWED = "recentlyViewed";
     private static final Integer RECENTLY_VIEWED_SIZE = 3;
 
@@ -50,7 +50,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         long id;
         Integer quantity;
         try {
