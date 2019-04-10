@@ -69,10 +69,11 @@ public class Cart {
         totalQuantity = 0;
         totalPrice = new BigDecimal("0");
         cartItems.forEach(cartItem -> {
-                    BigDecimal cartItemPrice = cartItem.getProduct().getPrice();
+                    BigDecimal cartItemProductPrice = cartItem.getProduct().getPrice();
                     int cartItemQuantity = cartItem.getQuantity();
                     totalQuantity += cartItemQuantity;
-                    totalPrice = totalPrice.add(cartItemPrice.multiply(BigDecimal.valueOf(cartItemQuantity)));
+                    BigDecimal cartItemPrice = cartItemProductPrice.multiply(BigDecimal.valueOf(cartItemQuantity));
+                    totalPrice = totalPrice.add(cartItemPrice);
                 }
         );
     }
