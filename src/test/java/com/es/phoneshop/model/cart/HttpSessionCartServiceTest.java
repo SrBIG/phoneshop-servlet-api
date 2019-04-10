@@ -5,6 +5,7 @@ import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.exception.ProductNotFoundException;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -14,10 +15,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.math.BigDecimal;
+
 import static com.es.phoneshop.model.cart.HttpSessionCartService.SESSION_CART;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HttpSessionCartServiceTest {
@@ -28,23 +30,33 @@ public class HttpSessionCartServiceTest {
     @Mock
     private Cart cart;
     @Mock
-    private ArrayListProductDao productDao;
-    @Mock
-    private Product product;
+    private static ArrayListProductDao productDao;
 
-    private long realId = 1L;
-    private int realQuantity = 1;
+    private static Product product;
+
+    private static BigDecimal price = new BigDecimal("1");
+    private static long realId = 1L;
+    private static int realQuantity = 1;
     private int failQuantity = 0;
 
     @InjectMocks
     private HttpSessionCartService cartService;
 
+    @BeforeClass
+    public static void setupClass(){
+        productDao = ArrayListProductDao.getInstance();
+        product = mock(Product.class);
+        when(product.getId()).thenReturn(realId);
+        when(product.getStock()).thenReturn(realQuantity);
+        when(product.getPrice()).thenReturn(price);
+        productDao.save(product);
+    }
+
     @Before
-    public void setup() throws ProductNotFoundException {
+    public void setup() {
+
+
         when(request.getSession()).thenReturn(session);
-        when(ArrayListProductDao.getInstance().getProduct(realId)).thenReturn(product);
-//        when(ArrayListProductDao.getInstance()).thenReturn(productDao);
-//        when(productDao.getProduct(realId)).thenReturn(product);
         cartService = (HttpSessionCartService) HttpSessionCartService.getInstance();
     }
 

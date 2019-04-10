@@ -15,6 +15,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import static org.mockito.ArgumentMatchers.anyString;
@@ -32,6 +33,8 @@ public class ProductDetailsPageServletTest {
     private ArrayListProductDao productDao;
     @Mock
     private Product product;
+    @Mock
+    private HttpSession session;
     @InjectMocks
     private static ProductDetailsPageServlet servlet;
 
@@ -39,6 +42,7 @@ public class ProductDetailsPageServletTest {
     public void setup() {
         when(request.getPathInfo()).thenReturn("/1");
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
+        when(request.getSession()).thenReturn(session);
     }
 
     @Test
