@@ -4,6 +4,7 @@ import com.es.phoneshop.model.cart.exception.OutOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.exception.ProductNotFoundException;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class HttpSessionCartServiceTest {
     private static Product product;
 
     private static BigDecimal price = new BigDecimal("1");
-    private static long realId = 1L;
+    private static long realId = 41L;
     private static int realQuantity = 1;
     private int failQuantity = 0;
 
@@ -50,6 +51,11 @@ public class HttpSessionCartServiceTest {
         when(product.getStock()).thenReturn(realQuantity);
         when(product.getPrice()).thenReturn(price);
         productDao.save(product);
+    }
+
+    @AfterClass
+    public static void destroyClass() throws ProductNotFoundException {
+        productDao.delete(realId);
     }
 
     @Before

@@ -8,12 +8,10 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sun.plugin2.main.server.WindowsHelper;
 
 import java.math.BigDecimal;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -22,10 +20,8 @@ public class CartTest {
     private Product product;
     @Mock
     private BigDecimal price;
-    @Mock
-    private CartItem cartItem;
 
-    private long productId = 1L;
+    private long productId = 31L;
     private int stock = 10;
     private int intPrice = 2;
     private int quantity = 1;
