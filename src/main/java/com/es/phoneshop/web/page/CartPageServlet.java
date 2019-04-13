@@ -15,8 +15,12 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class CartPageServlet extends HttpServlet {
-    private CartService cartService = HttpSessionCartService.getInstance();
+    private CartService cartService;
 
+    @Override
+    public void init() throws ServletException {
+        cartService = HttpSessionCartService.getInstance();
+    }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
