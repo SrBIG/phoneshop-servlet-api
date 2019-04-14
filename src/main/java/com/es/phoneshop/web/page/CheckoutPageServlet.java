@@ -106,6 +106,7 @@ public class CheckoutPageServlet extends HttpServlet {
         order.setDeliveryAddress(deliveryAddress);
         order.setPaymentMethod(paymentMethod);
         orderService.placeOrder(order);
+        cartService.clearCart(request);
 
         response.sendRedirect(request.getContextPath() + "/orderOverview/" + order.getSecureId());
     }
