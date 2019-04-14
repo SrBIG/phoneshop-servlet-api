@@ -2,6 +2,8 @@ package com.es.phoneshop.model.order;
 
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
+import com.es.phoneshop.model.order.dao.ArrayListOrderDao;
+import com.es.phoneshop.model.order.dao.OrderDao;
 import com.es.phoneshop.model.person.Customer;
 
 import java.math.BigDecimal;
@@ -12,6 +14,7 @@ import java.util.stream.Collectors;
 
 public class OrderServiceImpl implements OrderService {
     private static OrderService instance;
+    private static OrderDao orderDao;
 
     public static OrderService getInstance() {
         if (instance == null) {
@@ -25,6 +28,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private OrderServiceImpl() {
+        orderDao = ArrayListOrderDao.getInstance();
     }
 
     @Override
@@ -40,12 +44,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void placeOrder(Order order,
-                           Customer customer,
-                           DeliveryMode deliveryMode,
-                           Date deliveryDate,
-                           String deliveryAddress,
-                           PaymentMethod paymentMethod) {
+    public void placeOrder(Order order) {
 
     }
 

@@ -103,7 +103,14 @@ public class CheckoutPageServlet extends HttpServlet {
         }
 
         Customer customer = new Customer(name, surname, phoneNumber);
-        orderService.placeOrder(order, customer, deliveryMode, deliveryDate, deliveryAddress, paymentMethod);
+
+        order.setCustomer(customer);
+        order.setDeliveryMode(deliveryMode);
+        order.setDeliveryDate(deliveryDate);
+        order.setDeliveryAddress(deliveryAddress);
+        order.setPaymentMethod(paymentMethod);
+
+        orderService.placeOrder(order);
     }
 
     private boolean isValidStringParameter(String parameter) {
