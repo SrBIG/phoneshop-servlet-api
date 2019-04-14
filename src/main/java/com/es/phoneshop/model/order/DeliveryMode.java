@@ -3,8 +3,8 @@ package com.es.phoneshop.model.order;
 import java.math.BigDecimal;
 
 public enum DeliveryMode {
-    COURIER("Courier", BigDecimal.ZERO),
-    STOREPICKUP("Store Pickup", BigDecimal.valueOf(20));
+    COURIER("Courier", BigDecimal.valueOf(20)),
+    STOREPICKUP("Store Pickup", BigDecimal.ZERO);
 
     private String name;
     private BigDecimal cost;
@@ -14,7 +14,7 @@ public enum DeliveryMode {
     }
 
     public BigDecimal getCost() {
-        return cost;
+        return this.cost;
     }
 
     DeliveryMode(String name, BigDecimal cost) {

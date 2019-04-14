@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 public class Order {
+    private Long id;
+    private String secureId;
     private Customer customer;
     private DeliveryMode deliveryMode;
     private Date deliveryDate;
@@ -15,6 +17,23 @@ public class Order {
     private PaymentMethod paymentMethod;
     private BigDecimal totalPrice;
     private List<CartItem> orderItems;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getSecureId() {
+        return secureId;
+    }
+
+    public void setSecureId(String secureId) {
+        this.secureId = secureId;
+    }
 
     public Customer getCustomer() {
         return customer;

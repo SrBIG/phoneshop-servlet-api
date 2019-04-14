@@ -5,9 +5,9 @@
 
 <jsp:useBean id="order" scope="session" class="com.es.phoneshop.model.order.Order"/>
 
-<tags:master pageTitle="Checkout">
-    <h2>Checkout</h2>
-    <c:if test="${empty order || order.orderItems.isEmpty() }">
+<tags:master pageTitle="Order overview">
+    <h2>Order overview</h2>
+    <c:if test="${empty order || order.orderItems.isEmpty()}">
         Order is empty!
     </c:if>
     <c:if test="${not empty order && !order.orderItems.isEmpty()}">
@@ -42,54 +42,42 @@
                 </c:forEach>
                 <tr>
                     <td colspan="3">
+                            ${order.deliveryMode}
+                    </td>
+                    <td class="price">
+                            ${order.deliveryMode.cost}
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="3">
                         Total Price:
                     </td>
-                    <td>
+                    <td class="price">
                             ${order.totalPrice}
                     </td>
                 </tr>
             </table>
         </form>
-        <form method="post" action="${pageContext.servletContext.contextPath}/checkout">
-            <p>
-                <label for="name">Name:</label>
-                <input id="name" name="name"/>
-            </p>
-            <p>
-                <label for="surname">Surname:</label>
-                <input id="surname" name="surname"/>
-            </p>
-            <p>
-                <label for="phoneNumber">Phone number:</label>
-                <input id="phoneNumber" name="phoneNumber"/>
-            </p>
-            <p>
-                <label>Delivery mode:</label>
-                <select name="deliveryMode" id="deliveryMode">
-                    <c:forEach var="deliveryMode" items="${deliveryModes}">
-                        <option value="${deliveryMode}" name="${deliveryMode}">
-                                ${deliveryMode.name}
-                        </option>
-                    </c:forEach>
-                </select>
-            </p>
-            <p>
-                <label for="deliveryDate">Delivery date:</label>
-                <input id="deliveryDate" name="deliveryDate" type="date"/>
-            </p>
-            <p>
-                    <label for="deliveryAddress">Delivery address:</label>
-                <input id="deliveryAddress" name="deliveryAddress"/>
-            </p>
-            <p>
-                <label>Payment method:</label>
-                <c:forEach var="paymentMethod" items="${paymentMethods}">
-                    <input type="radio" name="paymentMethod" value="${paymentMethod}"/>${paymentMethod}
-                </c:forEach>
-            </p>
-            <button>
-                Place order
-            </button>
-        </form>
+        <p>
+            <label>Name: ${order.customer.name}</label>
+        </p>
+        <p>
+            <label>Surname: ${order.customer.surname}</label>
+        </p>
+        <p>
+            <label>Phone number: ${order.customer.phoneNumber}</label>
+        </p>
+        <p>
+            <label>Delivery mode: ${order.deliveryMode.name}</label>
+        </p>
+        <p>
+            <label>Delivery date: ${order.deliveryDate}</label>
+        </p>
+        <p>
+            <label>Delivery address: ${order.deliveryAddress}</label>
+        </p>
+        <p>
+            <label>Payment method: ${order.paymentMethod}</label>
+        </p>
     </c:if>
 </tags:master>

@@ -4,11 +4,9 @@ import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
 import com.es.phoneshop.model.order.dao.ArrayListOrderDao;
 import com.es.phoneshop.model.order.dao.OrderDao;
-import com.es.phoneshop.model.person.Customer;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +43,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void placeOrder(Order order) {
-
+        BigDecimal totalPrice = order.getTotalPrice().add(order.getDeliveryMode().getCost());
+        order.setTotalPrice(totalPrice);
+        orderDao.save(order);
     }
 
     @Override

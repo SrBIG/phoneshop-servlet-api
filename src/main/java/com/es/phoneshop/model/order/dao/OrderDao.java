@@ -8,4 +8,6 @@ public interface OrderDao {
     void save(Order Order) throws IllegalArgumentException;
 
     void delete(long id) throws IllegalArgumentException;
+
+    Order getBySecureId(String secureId);
 }

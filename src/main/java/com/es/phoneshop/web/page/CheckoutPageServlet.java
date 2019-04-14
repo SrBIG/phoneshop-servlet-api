@@ -39,28 +39,22 @@ public class CheckoutPageServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Order order = (Order) request.getAttribute("order");
-        if (Objects.isNull(order)) {
-            response.sendError(404, "Order not found");
-            return;
-        }
-
         boolean hasError = false;
 
         String name = request.getParameter("name");
-        if (!isValidStringParameter(name)) {
+        if (isInvalidStringParameter(name)) {
             hasError = true;
             request.setAttribute("nameError", "Name is required");
         }
 
         String surname = request.getParameter("surname");
-        if (!isValidStringParameter(surname)) {
+        if (isInvalidStringParameter(surname)) {
             hasError = true;
             request.setAttribute("surnameError", "Surname is required");
         }
 
         String phoneNumber = request.getParameter("phoneNumber");
-        if (!isValidStringParameter(phoneNumber)) {
+        if (isInvalidStringParameter(phoneNumber)) {
             hasError = true;
             request.setAttribute("phoneNumberError", "Phone number is required");
         }
@@ -84,7 +78,7 @@ public class CheckoutPageServlet extends HttpServlet {
         }
 
         String deliveryAddress = request.getParameter("deliveryAddress");
-        if (!isValidStringParameter(deliveryAddress)) {
+        if (isInvalidStringParameter(deliveryAddress)) {
             hasError = true;
             request.setAttribute("deliveryAddressError", "Delivery address is required");
         }
@@ -97,23 +91,26 @@ public class CheckoutPageServlet extends HttpServlet {
             request.setAttribute("paymentMethodError", "Please check payment method");
         }
 
+        Cart cart = cartService.getCart(request);
+        Order order = orderService.createOrder(cart);
+
         if (hasError) {
             renderCheckoutPage(request, response, order);
             return;
         }
 
         Customer customer = new Customer(name, surname, phoneNumber);
-
         order.setCustomer(customer);
         order.setDeliveryMode(deliveryMode);
         order.setDeliveryDate(deliveryDate);
         order.setDeliveryAddress(deliveryAddress);
         order.setPaymentMethod(paymentMethod);
-
         orderService.placeOrder(order);
+
+        response.sendRedirect(request.getContextPath() + "/orderOverview/" + order.getSecureId());
     }
 
-    private boolean isValidStringParameter(String parameter) {
+    private boolean isInvalidStringParameter(String parameter) {
         return Objects.isNull(parameter) || parameter.isEmpty();
     }
 
