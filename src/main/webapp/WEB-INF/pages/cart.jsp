@@ -71,5 +71,10 @@
                 Update
             </button>
         </form>
+        <form>
+            <button formaction="${pageContext.servletContext.contextPath}/checkout">
+                Checkout
+            </button>
+        </form>
     </c:if>
 </tags:master>
