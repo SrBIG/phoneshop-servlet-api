@@ -1,6 +1,7 @@
 package com.es.phoneshop.model.order.dao;
 
 import com.es.phoneshop.model.order.Order;
+import com.es.phoneshop.model.order.dao.exception.OrderNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,22 +25,25 @@ public class ArrayListOrderDao implements OrderDao {
         return instance;
     }
 
-    private ArrayListOrderDao(){
+    private ArrayListOrderDao() {
         orders = new ArrayList<>();
         orderId = new AtomicLong();
     }
 
     @Override
-    public Order getOrder(long id) throws IllegalArgumentException {
-        return null;
+    public Order getOrder(long id) throws IllegalArgumentException, OrderNotFoundException {
+        return orders.stream()
+                .filter(order -> order.getId().equals(id))
+                .findAny()
+                .orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
     }
 
     @Override
-    public Order getBySecureId(String secureId) {
+    public Order getBySecureId(String secureId) throws OrderNotFoundException {
         return orders.stream()
                 .filter(order -> secureId.equals(order.getSecureId()))
                 .findAny()
-                .orElse(null);
+                .orElseThrow(() -> new OrderNotFoundException("Order with secure id " + secureId + " not found"));
     }
 
     @Override
@@ -50,7 +54,9 @@ public class ArrayListOrderDao implements OrderDao {
     }
 
     @Override
-    public void delete(long id) throws IllegalArgumentException {
-
+    public void delete(long id) throws IllegalArgumentException, OrderNotFoundException {
+        if (!orders.removeIf(order -> order.getId().equals(id))) {
+            throw new OrderNotFoundException(String.valueOf(id));
+        }
     }
 }

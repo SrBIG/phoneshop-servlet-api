@@ -1,10 +1,9 @@
 package com.es.phoneshop.web.page;
 
-import com.es.phoneshop.model.cart.CartService;
-import com.es.phoneshop.model.cart.HttpSessionCartService;
-import com.es.phoneshop.model.order.*;
+import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.model.order.dao.ArrayListOrderDao;
 import com.es.phoneshop.model.order.dao.OrderDao;
+import com.es.phoneshop.model.order.dao.exception.OrderNotFoundException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,8 +26,8 @@ public class OrderOverviewPageServlet extends HttpServlet {
             Order order = orderDao.getBySecureId(id);
             request.setAttribute("order", order);
             request.getRequestDispatcher("/WEB-INF/pages/orderOverview.jsp").forward(request, response);
-        } catch (NumberFormatException exception) {
-            response.sendError(404, "Product not found");
+        } catch (NumberFormatException | OrderNotFoundException exception) {
+            response.sendError(404, "Order not found");
         }
     }
 
