@@ -52,39 +52,67 @@
         </form>
         <form method="post" action="${pageContext.servletContext.contextPath}/checkout">
             <p>
+                <c:if test="${not empty nameError}">
+                    <span class="error">${nameError}</span>
+                    <br>
+                </c:if>
                 <label for="name">Name:</label>
-                <input id="name" name="name"/>
+                <input id="name" name="name" value="${not empty param.name ? param.name : ""}"/>
             </p>
             <p>
+                <c:if test="${not empty surnameError}">
+                    <span class="error">${surnameError}</span>
+                    <br>
+                </c:if>
                 <label for="surname">Surname:</label>
-                <input id="surname" name="surname"/>
+                <input id="surname" name="surname" value="${not empty param.surname ? param.surname : ""}"/>
             </p>
             <p>
+                <c:if test="${not empty phoneNumberError}">
+                    <span class="error">${phoneNumberError}</span>
+                    <br>
+                </c:if>
                 <label for="phoneNumber">Phone number:</label>
-                <input id="phoneNumber" name="phoneNumber"/>
+                <input id="phoneNumber" name="phoneNumber" value="${not empty param.phoneNumber ? param.phoneNumber : ""}"/>
             </p>
             <p>
+                <c:if test="${not empty deliveryModeError}">
+                    <span class="error">${deliveryModeError}</span>
+                    <br>
+                </c:if>
                 <label>Delivery mode:</label>
-                <select name="deliveryMode" id="deliveryMode">
-                    <c:forEach var="deliveryMode" items="${deliveryModes}">
-                        <option value="${deliveryMode}" name="${deliveryMode}">
-                                ${deliveryMode.name}
-                        </option>
-                    </c:forEach>
-                </select>
+                <br>
+                <c:forEach var="deliveryMode" items="${deliveryModes}">
+                    <input type="radio" id="${deliveryMode}" name="deliveryMode" value="${deliveryMode}" checked/>
+                    <label for="${deliveryMode}">${deliveryMode.name} (${deliveryMode.cost})</label>
+                </c:forEach>
             </p>
             <p>
+                <c:if test="${not empty deliveryDateError}">
+                    <span class="error">${deliveryDateError}</span>
+                    <br>
+                </c:if>
                 <label for="deliveryDate">Delivery date:</label>
-                <input id="deliveryDate" name="deliveryDate" type="date"/>
+                <input id="deliveryDate" name="deliveryDate" type="date" value="${not empty param.deliveryDate ? param.deliveryDate : ""}"/>
             </p>
             <p>
-                    <label for="deliveryAddress">Delivery address:</label>
-                <input id="deliveryAddress" name="deliveryAddress"/>
+                <c:if test="${not empty deliveryAddressError}">
+                    <span class="error">${deliveryAddressError}</span>
+                    <br>
+                </c:if>
+                <label for="deliveryAddress">Delivery address:</label>
+                <input id="deliveryAddress" name="deliveryAddress" value="${not empty param.deliveryAddress ? param.deliveryAddress : ""}"/>
             </p>
             <p>
+                <c:if test="${not empty paymentMethodError}">
+                    <span class="error">${paymentMethodError}</span>
+                    <br>
+                </c:if>
                 <label>Payment method:</label>
+                <br>
                 <c:forEach var="paymentMethod" items="${paymentMethods}">
-                    <input type="radio" name="paymentMethod" value="${paymentMethod}"/>${paymentMethod}
+                    <input type="radio" id="${paymentMethod}" name="paymentMethod" value="${paymentMethod}" checked/>
+                    <label for="${paymentMethod}">${paymentMethod}</label>
                 </c:forEach>
             </p>
             <button>

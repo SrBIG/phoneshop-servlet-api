@@ -71,7 +71,7 @@
             <label>Delivery mode: ${order.deliveryMode.name}</label>
         </p>
         <p>
-            <label>Delivery date: ${order.deliveryDate}</label>
+            <label>Delivery date: <fmt:formatDate value="${order.deliveryDate}" pattern="dd.MM.yyyy"/></label>
         </p>
         <p>
             <label>Delivery address: ${order.deliveryAddress}</label>
