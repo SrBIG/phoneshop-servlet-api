@@ -31,7 +31,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private CartService cartService;
 
     @Override
-    public void init(ServletConfig config) {
+    public void init() {
         productDao = ArrayListProductDao.getInstance();
         cartService = HttpSessionCartService.getInstance();
     }
