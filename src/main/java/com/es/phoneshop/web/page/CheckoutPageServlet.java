@@ -62,7 +62,7 @@ public class CheckoutPageServlet extends HttpServlet {
         DeliveryMode deliveryMode = null;
         try {
             deliveryMode = DeliveryMode.valueOf(request.getParameter("deliveryMode"));
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
             hasError = true;
             request.setAttribute("deliveryModeError", "Please check delivery mode");
         }
@@ -72,7 +72,7 @@ public class CheckoutPageServlet extends HttpServlet {
             String date = request.getParameter("deliveryDate");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             deliveryDate = sdf.parse(date);
-        } catch (ParseException e) {
+        } catch (ParseException | NullPointerException e) {
             hasError = true;
             request.setAttribute("deliveryDateError", "Please check delivery date");
         }
@@ -86,7 +86,7 @@ public class CheckoutPageServlet extends HttpServlet {
         PaymentMethod paymentMethod = null;
         try {
             paymentMethod = PaymentMethod.valueOf(request.getParameter("paymentMethod"));
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | NullPointerException e) {
             hasError = true;
             request.setAttribute("paymentMethodError", "Please check payment method");
         }
