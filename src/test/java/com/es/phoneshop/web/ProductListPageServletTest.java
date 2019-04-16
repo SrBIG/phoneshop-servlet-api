@@ -26,15 +26,13 @@ public class ProductListPageServletTest {
     private HttpServletResponse response;
     @Mock
     private RequestDispatcher requestDispatcher;
-    @Mock
-    private ServletConfig servletConfig;
 
     private ProductListPageServlet servlet = new ProductListPageServlet();
 
     @Before
     public void setup() {
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
-        servlet.init(servletConfig);
+        servlet.init();
     }
 
     @Test

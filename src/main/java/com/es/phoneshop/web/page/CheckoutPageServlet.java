@@ -34,7 +34,7 @@ public class CheckoutPageServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Cart cart = cartService.getCart(request);
-        if (!cart.isActual()){
+        if (!cartService.isCartActual(cart)){
             response.sendRedirect(request.getContextPath() + "/cart");
             return;
         }

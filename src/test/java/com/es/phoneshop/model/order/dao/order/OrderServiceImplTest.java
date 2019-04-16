@@ -1,6 +1,7 @@
 package com.es.phoneshop.model.order.dao.order;
 
 import com.es.phoneshop.model.cart.Cart;
+import com.es.phoneshop.model.cart.exception.OutOfStockException;
 import com.es.phoneshop.model.order.DeliveryMode;
 import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.model.order.OrderService;
@@ -48,7 +49,7 @@ public class OrderServiceImplTest {
     }
 
     @Test
-    public void testPlaceOrder() {
+    public void testPlaceOrder() throws OutOfStockException {
         BigDecimal totalPrice = mock(BigDecimal.class);
         when(orderPrice.add(deliveryCost)).thenReturn(totalPrice);
         orderService.placeOrder(order);

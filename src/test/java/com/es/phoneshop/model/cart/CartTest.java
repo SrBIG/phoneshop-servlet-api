@@ -1,7 +1,11 @@
 package com.es.phoneshop.model.cart;
 
 import com.es.phoneshop.model.cart.exception.OutOfStockException;
+import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.ProductDao;
+import com.es.phoneshop.model.product.exception.ProductNotFoundException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +24,8 @@ public class CartTest {
     private Product product;
     @Mock
     private BigDecimal price;
+    @Mock
+    private ProductDao productDao;
 
     private long productId = 31L;
     private int stock = 10;
@@ -32,12 +38,21 @@ public class CartTest {
 
     @Before
     public void setup() {
+        productDao = ArrayListProductDao.getInstance();
+
         when(product.getStock()).thenReturn(stock);
         when(product.getPrice()).thenReturn(price);
         when(product.getId()).thenReturn(productId);
         when(price.multiply(BigDecimal.valueOf(quantity))).thenReturn(BigDecimal.valueOf(intPrice * quantity));
 
+        productDao.save(product);
+
         cart = new Cart();
+    }
+
+    @After
+    public void destroy() throws ProductNotFoundException {
+        productDao.delete(productId);
     }
 
     @Test(expected = OutOfStockException.class)
@@ -52,7 +67,6 @@ public class CartTest {
         BigDecimal expectedTotalPrice = BigDecimal.valueOf(quantity * intPrice);
         BigDecimal actualTotalPrice = cart.getTotalPrice();
         assertEquals(expectedTotalPrice, actualTotalPrice);
-
 
         int expectedTotalQuantity = quantity;
         int actualTotalQuantity = cart.getTotalQuantity();

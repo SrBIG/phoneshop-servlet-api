@@ -2,6 +2,7 @@ package com.es.phoneshop.web;
 
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
+import com.es.phoneshop.model.cart.exception.OutOfStockException;
 import com.es.phoneshop.model.order.DeliveryMode;
 import com.es.phoneshop.model.order.Order;
 import com.es.phoneshop.model.order.OrderService;
@@ -65,6 +66,7 @@ public class CheckoutPageServletTest {
         when(request.getParameter("deliveryAddress")).thenReturn(deliveryAddress);
         when(request.getParameter("paymentMethod")).thenReturn(paymentMethod);
         when(request.getRequestDispatcher(anyString())).thenReturn(requestDispatcher);
+        when(cartService.isCartActual(cart)).thenReturn(true);
 
         when(cartService.getCart(request)).thenReturn(cart);
         when(orderService.createOrder(cart)).thenReturn(order);
@@ -74,7 +76,7 @@ public class CheckoutPageServletTest {
     public void testDoGet() throws ServletException, IOException {
         servlet.doGet(request, response);
 
-        verify(request).setAttribute("order", order);
+        verify(request).setAttribute("cart", cart);
         verify(orderService).getDeliveryModes();
         verify(orderService).getPaymentMethod();
         verify(requestDispatcher).forward(request, response);
@@ -97,7 +99,7 @@ public class CheckoutPageServletTest {
     }
 
     @Test
-    public void testDoPostSuccessfully() throws IOException, ServletException {
+    public void testDoPostSuccessfully() throws IOException, ServletException, OutOfStockException {
         servlet.doPost(request, response);
 
         verify(order).setDeliveryMode(any(DeliveryMode.class));

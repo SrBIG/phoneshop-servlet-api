@@ -6,6 +6,7 @@ import com.es.phoneshop.model.cart.exception.OutOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.exception.ProductNotFoundException;
+import com.es.phoneshop.model.recentlyViewed.RecentlyViewedServiceImpl;
 import com.es.phoneshop.web.page.ProductDetailsPageServlet;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,11 +21,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class ProductDetailsPageServletTest {
     @Mock
     private HttpServletRequest request;
@@ -34,6 +36,10 @@ public class ProductDetailsPageServletTest {
     private RequestDispatcher requestDispatcher;
     @Mock
     private ArrayListProductDao productDao;
+    @Mock
+    private RecentlyViewedServiceImpl recentlyViewedService;
+    @Mock
+    private List<Product> recentlyViewedProducts;
     @Mock
     private Product product;
     @Mock
@@ -58,6 +64,7 @@ public class ProductDetailsPageServletTest {
         when(request.getSession()).thenReturn(session);
         when(cartService.getCart(request)).thenReturn(cart);
         when(request.getParameter(ProductDetailsPageServlet.QUANTITY)).thenReturn(quantityStr);
+        when(recentlyViewedService.add(anyList(), any(Product.class))).thenReturn(recentlyViewedProducts);
     }
 
     @Test
