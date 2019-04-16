@@ -29,7 +29,7 @@
                                  src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
                         </td>
                         <td>
-                            <a href="products/${product.id}"> ${product.description}</a>
+                            <a href="${pageContext.servletContext.contextPath}/products/${product.id}"> ${product.description}</a>
                         </td>
                         <td>
                                 ${cartItem.quantity}
