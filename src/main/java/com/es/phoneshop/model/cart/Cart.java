@@ -3,12 +3,14 @@ package com.es.phoneshop.model.cart;
 import com.es.phoneshop.model.cart.exception.OutOfStockException;
 import com.es.phoneshop.model.product.Product;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class Cart {
+public class Cart implements Serializable {
+    private static final long serialVersionUID = 5072467879945166677L;
     private List<CartItem> cartItems;
     private BigDecimal totalPrice;
     private int totalQuantity;
