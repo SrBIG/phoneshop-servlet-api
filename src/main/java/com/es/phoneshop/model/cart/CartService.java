@@ -11,4 +11,5 @@ public interface CartService {
     void update(Cart cart, long productId, int quantity) throws ProductNotFoundException, OutOfStockException, IllegalArgumentException;
     void delete(Cart cart, long productId) throws ProductNotFoundException;
     void clearCart(HttpServletRequest request);
+    boolean isCartActual(Cart cart);
 }

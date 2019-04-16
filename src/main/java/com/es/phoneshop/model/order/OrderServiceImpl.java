@@ -2,17 +2,24 @@ package com.es.phoneshop.model.order;
 
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartItem;
+import com.es.phoneshop.model.cart.exception.OutOfStockException;
 import com.es.phoneshop.model.order.dao.ArrayListOrderDao;
 import com.es.phoneshop.model.order.dao.OrderDao;
+import com.es.phoneshop.model.product.ArrayListProductDao;
+import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.ProductDao;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class OrderServiceImpl implements OrderService {
     private static OrderService instance;
     private static OrderDao orderDao;
+    private ProductDao productDao;
 
     public static OrderService getInstance() {
         if (instance == null) {
@@ -27,6 +34,7 @@ public class OrderServiceImpl implements OrderService {
 
     private OrderServiceImpl() {
         orderDao = ArrayListOrderDao.getInstance();
+        productDao = ArrayListProductDao.getInstance();
     }
 
     @Override
@@ -42,10 +50,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void placeOrder(Order order) {
-        BigDecimal totalPrice = order.getTotalPrice().add(order.getDeliveryMode().getCost());
+    public void placeOrder(Order order) throws OutOfStockException {
+        BigDecimal deliveryCost = order.getDeliveryMode().getCost();
+        BigDecimal totalPrice = order.getTotalPrice().add(deliveryCost);
         order.setTotalPrice(totalPrice);
         orderDao.save(order);
+        stockReduction(order.getOrderItems());
     }
 
     @Override
@@ -56,5 +66,22 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<PaymentMethod> getPaymentMethod() {
         return Arrays.asList(PaymentMethod.values());
+    }
+
+    synchronized private void stockReduction(List<CartItem> cartItems) throws OutOfStockException {
+        List<Product> productsToSave = new ArrayList<>();
+        AtomicBoolean notEnoughStock = new AtomicBoolean(false);
+        for (CartItem cartItem : cartItems){
+            Product product = cartItem.getProduct();
+            Integer quantity = cartItem.getQuantity();
+            Integer oldStock = product.getStock();
+            int newStock = oldStock - quantity;
+            if(newStock < 0){
+                throw new OutOfStockException("Not enough Stock!");
+            }
+            product.setStock(newStock);
+            productsToSave.add(product);
+        }
+        productsToSave.forEach(product -> productDao.save(product));
     }
 }

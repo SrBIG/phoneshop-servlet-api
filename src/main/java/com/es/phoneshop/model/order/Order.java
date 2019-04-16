@@ -18,7 +18,6 @@ public class Order {
     private BigDecimal totalPrice;
     private List<CartItem> orderItems;
 
-
     public Long getId() {
         return id;
     }

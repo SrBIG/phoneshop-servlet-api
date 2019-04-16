@@ -3,6 +3,7 @@ package com.es.phoneshop.web.page;
 import com.es.phoneshop.model.cart.Cart;
 import com.es.phoneshop.model.cart.CartService;
 import com.es.phoneshop.model.cart.HttpSessionCartService;
+import com.es.phoneshop.model.cart.exception.OutOfStockException;
 import com.es.phoneshop.model.order.*;
 import com.es.phoneshop.model.order.dao.ArrayListOrderDao;
 import com.es.phoneshop.model.order.dao.OrderDao;
@@ -33,6 +34,10 @@ public class CheckoutPageServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Cart cart = cartService.getCart(request);
+        if (!cart.isActual()){
+            response.sendRedirect(request.getContextPath() + "/cart");
+            return;
+        }
         renderCheckoutPage(request, response, cart);
     }
 
@@ -104,7 +109,13 @@ public class CheckoutPageServlet extends HttpServlet {
         order.setDeliveryDate(deliveryDate);
         order.setDeliveryAddress(deliveryAddress);
         order.setPaymentMethod(paymentMethod);
-        orderService.placeOrder(order);
+        try {
+            orderService.placeOrder(order);
+        } catch (OutOfStockException e) {
+            request.setAttribute("error", "Not enough stock! Please check your Cart!");
+            response.sendRedirect(request.getContextPath() + "/cart");
+            return;
+        }
         cartService.clearCart(request);
 
         request.setAttribute("order", order);

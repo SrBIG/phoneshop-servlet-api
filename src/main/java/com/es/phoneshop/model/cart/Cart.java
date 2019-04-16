@@ -1,7 +1,10 @@
 package com.es.phoneshop.model.cart;
 
 import com.es.phoneshop.model.cart.exception.OutOfStockException;
+import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
+import com.es.phoneshop.model.product.ProductDao;
+import com.es.phoneshop.model.product.exception.ProductNotFoundException;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -10,14 +13,16 @@ import java.util.List;
 import java.util.Optional;
 
 public class Cart implements Serializable {
-    private static final long serialVersionUID = 5072467879945166677L;
+    private static final long serialVersionUID = 7265526492135721028L;
     private List<CartItem> cartItems;
     private BigDecimal totalPrice;
     private int totalQuantity;
+    private ProductDao productDao;
 
     public Cart() {
         cartItems = new ArrayList<>();
         totalPrice = new BigDecimal("0");
+        productDao = ArrayListProductDao.getInstance();
     }
 
     public void addItem(Product product, int quantity) throws OutOfStockException {
@@ -55,7 +60,24 @@ public class Cart implements Serializable {
         recalculateTotal();
     }
 
+    public boolean isActual() {
+        for (CartItem cartItem : cartItems) {
+            try {
+                checkStock(cartItem.getProduct(), cartItem.getQuantity());
+            } catch (OutOfStockException e) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private void checkStock(Product product, int quantity) throws OutOfStockException {
+        try {
+            long productId = product.getId().longValue();
+            product = productDao.getProduct(productId);
+        } catch (ProductNotFoundException e) {
+            throw new OutOfStockException("Not enough stock!");
+        }
         if (quantity > product.getStock()) {
             throw new OutOfStockException("Not enough stock. Product stock is " + product.getStock());
         }

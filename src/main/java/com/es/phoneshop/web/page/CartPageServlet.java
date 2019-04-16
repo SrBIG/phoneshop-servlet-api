@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class CartPageServlet extends HttpServlet {
+    private static final String ERROR = "error";
     private CartService cartService;
 
     @Override
@@ -24,7 +25,11 @@ public class CartPageServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setAttribute("cart", cartService.getCart(request));
+        Cart cart = cartService.getCart(request);
+        request.setAttribute("cart", cart);
+        if (!cartService.isCartActual(cart)){
+            request.setAttribute(ERROR, "Please, update your cart!");
+        }
         request.getRequestDispatcher("/WEB-INF/pages/cart.jsp").forward(request, response);
     }
 
@@ -43,7 +48,7 @@ public class CartPageServlet extends HttpServlet {
                 try {
                     cartService.update(cart, productId, quantity);
                 } catch (ProductNotFoundException e) {
-                    e.printStackTrace();
+                    errors[index] = "Product already sold out";
                 } catch (OutOfStockException | IllegalArgumentException e) {
                     errors[index] = e.getMessage();
                 }
@@ -52,6 +57,7 @@ public class CartPageServlet extends HttpServlet {
         boolean hasError = Arrays.stream(errors).anyMatch(Objects::nonNull);
         if (hasError) {
             request.setAttribute("errors", errors);
+            request.setAttribute(ERROR, "Please, check your cart!");
             doGet(request, response);
         } else {
             response.sendRedirect(request.getRequestURI() + "?message=Updated successfully");

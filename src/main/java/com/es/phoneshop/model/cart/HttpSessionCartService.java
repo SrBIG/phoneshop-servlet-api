@@ -8,7 +8,6 @@ import com.es.phoneshop.model.product.exception.ProductNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Objects;
 
 public class HttpSessionCartService implements CartService {
     public static final String SESSION_CART = "cart";
@@ -66,6 +65,11 @@ public class HttpSessionCartService implements CartService {
         HttpSession session = request.getSession();
         Cart cart = new Cart();
         session.setAttribute(SESSION_CART, cart);
+    }
+
+    @Override
+    public boolean isCartActual(Cart cart) {
+        return cart.isActual();
     }
 
     private void checkQuantity(int quantity) throws IllegalArgumentException {
