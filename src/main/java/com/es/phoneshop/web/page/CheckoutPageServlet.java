@@ -33,8 +33,7 @@ public class CheckoutPageServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Cart cart = cartService.getCart(request);
-        Order order = orderService.createOrder(cart);
-        renderCheckoutPage(request, response, order);
+        renderCheckoutPage(request, response, cart);
     }
 
     @Override
@@ -92,13 +91,13 @@ public class CheckoutPageServlet extends HttpServlet {
         }
 
         Cart cart = cartService.getCart(request);
-        Order order = orderService.createOrder(cart);
-
         if (hasError) {
-            renderCheckoutPage(request, response, order);
+            request.setAttribute("cart", cart);
+            renderCheckoutPage(request, response, cart);
             return;
         }
 
+        Order order = orderService.createOrder(cart);
         Customer customer = new Customer(name, surname, phoneNumber);
         order.setCustomer(customer);
         order.setDeliveryMode(deliveryMode);
@@ -108,6 +107,7 @@ public class CheckoutPageServlet extends HttpServlet {
         orderService.placeOrder(order);
         cartService.clearCart(request);
 
+        request.setAttribute("order", order);
         response.sendRedirect(request.getContextPath() + "/orderOverview/" + order.getSecureId());
     }
 
@@ -115,9 +115,9 @@ public class CheckoutPageServlet extends HttpServlet {
         return Objects.isNull(parameter) || parameter.isEmpty();
     }
 
-    private void renderCheckoutPage(HttpServletRequest request, HttpServletResponse response, Order order)
+    private void renderCheckoutPage(HttpServletRequest request, HttpServletResponse response, Cart cart)
             throws ServletException, IOException {
-        request.setAttribute("order", order);
+        request.setAttribute("cart", cart);
         request.setAttribute("deliveryModes", orderService.getDeliveryModes());
         request.setAttribute("paymentMethods", orderService.getPaymentMethod());
         request.getRequestDispatcher("/WEB-INF/pages/checkout.jsp").forward(request, response);

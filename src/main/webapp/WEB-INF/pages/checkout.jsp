@@ -3,14 +3,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<jsp:useBean id="order" scope="session" class="com.es.phoneshop.model.order.Order"/>
+<jsp:useBean id="cart" scope="session" class="com.es.phoneshop.model.cart.Cart"/>
 
 <tags:master pageTitle="Checkout">
     <h2>Checkout</h2>
-    <c:if test="${empty order || order.orderItems.isEmpty() }">
+    <c:if test="${empty cart || cart.cartItems.isEmpty() }">
         Order is empty!
     </c:if>
-    <c:if test="${not empty order && !order.orderItems.isEmpty()}">
+    <c:if test="${not empty cart && !cart.cartItems.isEmpty()}">
         <form method="post" action="${pageContext.servletContext.contextPath}/checkout">
             <table>
                 <thead>
@@ -21,7 +21,7 @@
                     <td class="price">Price</td>
                 </tr>
                 </thead>
-                <c:forEach var="cartItem" items="${order.orderItems}" varStatus="status">
+                <c:forEach var="cartItem" items="${cart.cartItems}" varStatus="status">
                     <c:set var="product" value="${cartItem.product}"/>
                     <tr>
                         <td>
@@ -45,7 +45,7 @@
                         Total Price:
                     </td>
                     <td>
-                            ${order.totalPrice}
+                            ${cart.totalPrice}
                     </td>
                 </tr>
             </table>
