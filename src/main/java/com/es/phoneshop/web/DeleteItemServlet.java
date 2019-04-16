@@ -15,7 +15,7 @@ public class DeleteItemServlet extends HttpServlet {
     private CartService cartService;
 
     @Override
-    public void init(ServletConfig config) {
+    public void init() {
         cartService = HttpSessionCartService.getInstance();
     }
 

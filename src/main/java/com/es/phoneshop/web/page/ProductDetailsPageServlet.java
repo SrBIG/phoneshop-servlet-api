@@ -8,6 +8,8 @@ import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
 import com.es.phoneshop.model.product.exception.ProductNotFoundException;
+import com.es.phoneshop.model.recentlyViewed.RecentlyViewedService;
+import com.es.phoneshop.model.recentlyViewed.RecentlyViewedServiceImpl;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -29,11 +31,13 @@ public class ProductDetailsPageServlet extends HttpServlet {
 
     private ProductDao productDao;
     private CartService cartService;
+    private RecentlyViewedService recentlyViewedService;
 
     @Override
-    public void init(ServletConfig config) {
+    public void init() {
         productDao = ArrayListProductDao.getInstance();
         cartService = HttpSessionCartService.getInstance();
+        recentlyViewedService = RecentlyViewedServiceImpl.getInstance();
     }
 
     @Override
@@ -81,16 +85,11 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private void addToRecentlyViewed(HttpServletRequest request, Product product) {
         HttpSession session = request.getSession();
         List<Product> recentlyViewed = (List<Product>) session.getAttribute(RECENTLY_VIEWED);
-        if (recentlyViewed == null) {
-            recentlyViewed = new ArrayList<>();
+        try {
+            recentlyViewed = recentlyViewedService.add(recentlyViewed, product);
             session.setAttribute(RECENTLY_VIEWED, recentlyViewed);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
         }
-        if (recentlyViewed.contains(product)) {
-            return;
-        }
-        if (recentlyViewed.size() >= RECENTLY_VIEWED_SIZE) {
-            recentlyViewed.remove(0);
-        }
-        recentlyViewed.add(product);
     }
 }

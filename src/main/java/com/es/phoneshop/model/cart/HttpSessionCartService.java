@@ -60,6 +60,18 @@ public class HttpSessionCartService implements CartService {
         cart.delete(product);
     }
 
+    @Override
+    public void clearCart(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Cart cart = new Cart();
+        session.setAttribute(SESSION_CART, cart);
+    }
+
+    @Override
+    public boolean isCartActual(Cart cart) {
+        return cart.isActual();
+    }
+
     private void checkQuantity(int quantity) throws IllegalArgumentException {
         if (quantity < 1) {
             throw new IllegalArgumentException("Quantity must be more 0");

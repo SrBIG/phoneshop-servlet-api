@@ -7,8 +7,8 @@
 
 <tags:master pageTitle="Cart">
     <h2>Cart</h2>
-    <c:if test="${not empty errors}">
-        <p class="error">Error updating cart</p>
+    <c:if test="${not empty error}">
+        <p class="error">${error}</p>
     </c:if>
 
     <p class="success">${param.message}</p>
@@ -69,6 +69,11 @@
             <br>
             <button>
                 Update
+            </button>
+        </form>
+        <form>
+            <button formaction="${pageContext.servletContext.contextPath}/checkout">
+                Checkout
             </button>
         </form>
     </c:if>

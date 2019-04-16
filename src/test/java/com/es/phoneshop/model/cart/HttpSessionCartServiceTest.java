@@ -43,7 +43,7 @@ public class HttpSessionCartServiceTest {
     private HttpSessionCartService cartService;
 
     @BeforeClass
-    public static void setupClass(){
+    public static void setupClass() {
         productDao = ArrayListProductDao.getInstance();
         product = mock(Product.class);
         when(product.getId()).thenReturn(realId);
@@ -54,13 +54,13 @@ public class HttpSessionCartServiceTest {
 
     @AfterClass
     public static void destroyClass() throws ProductNotFoundException {
-        productDao.delete(realId);
+        productDao = ArrayListProductDao.getInstance();
+        productDao.delete(product.getId());
+        productDao.findProducts(null, null, null);
     }
 
     @Before
     public void setup() {
-
-
         when(request.getSession()).thenReturn(session);
         cartService = (HttpSessionCartService) HttpSessionCartService.getInstance();
     }

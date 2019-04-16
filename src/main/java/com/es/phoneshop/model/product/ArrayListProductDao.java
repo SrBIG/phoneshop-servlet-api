@@ -60,7 +60,17 @@ public class ArrayListProductDao implements ProductDao {
         if (Objects.isNull(product)) {
             throw new IllegalArgumentException("product cant be null");
         }
-        products.add(product);
+        boolean hasSuchProduct = products.stream().anyMatch(curProduct -> product.getId().equals(curProduct.getId()));
+        if (hasSuchProduct) {
+            try {
+                delete(product.getId());
+                save(product);
+            } catch (ProductNotFoundException e) {
+                products.add(product);
+            }
+        } else {
+            products.add(product);
+        }
     }
 
     @Override

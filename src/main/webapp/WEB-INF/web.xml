@@ -50,14 +50,34 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>miniCart</servlet-name>
-        <servlet-class>com.es.phoneshop.web.MiniCartServlet</servlet-class>
+        <servlet-name>checkout</servlet-name>
+        <servlet-class>com.es.phoneshop.web.page.CheckoutPageServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>miniCart</servlet-name>
-        <url-pattern>/minicart</url-pattern>
+        <servlet-name>checkout</servlet-name>
+        <url-pattern>/checkout</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>orderOverview</servlet-name>
+        <servlet-class>com.es.phoneshop.web.page.OrderOverviewPageServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>orderOverview</servlet-name>
+        <url-pattern>/orderOverview/*</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>dosFilter</filter-name>
+        <filter-class>com.es.phoneshop.web.filter.DosFilter</filter-class>
+    </filter>
+
+   <filter-mapping>
+       <filter-name>dosFilter</filter-name>
+       <url-pattern>/*</url-pattern>
+   </filter-mapping>
 
     <error-page>
         <error-code>404</error-code>
