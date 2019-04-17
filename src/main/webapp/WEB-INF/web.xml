@@ -69,6 +69,16 @@
         <url-pattern>/orderOverview/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>postProductReview</servlet-name>
+        <servlet-class>com.es.phoneshop.web.PostProductReviewServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>postProductReview</servlet-name>
+        <url-pattern>/postProductReview/*</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>dosFilter</filter-name>
         <filter-class>com.es.phoneshop.web.filter.DosFilter</filter-class>

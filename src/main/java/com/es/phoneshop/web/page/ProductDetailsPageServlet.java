@@ -8,17 +8,18 @@ import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.ProductDao;
 import com.es.phoneshop.model.product.exception.ProductNotFoundException;
+import com.es.phoneshop.model.productReview.ArrayListProductReviewDao;
+import com.es.phoneshop.model.productReview.ProductReview;
+import com.es.phoneshop.model.productReview.ProductReviewDao;
 import com.es.phoneshop.model.recentlyViewed.RecentlyViewedService;
 import com.es.phoneshop.model.recentlyViewed.RecentlyViewedServiceImpl;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDetailsPageServlet extends HttpServlet {
@@ -32,12 +33,14 @@ public class ProductDetailsPageServlet extends HttpServlet {
     private ProductDao productDao;
     private CartService cartService;
     private RecentlyViewedService recentlyViewedService;
+    private ProductReviewDao productReviewDao;
 
     @Override
     public void init() {
         productDao = ArrayListProductDao.getInstance();
         cartService = HttpSessionCartService.getInstance();
         recentlyViewedService = RecentlyViewedServiceImpl.getInstance();
+        productReviewDao = ArrayListProductReviewDao.getInstance();
     }
 
     @Override
@@ -47,6 +50,8 @@ public class ProductDetailsPageServlet extends HttpServlet {
             Product product = productDao.getProduct(id);
             addToRecentlyViewed(request, product);
             request.setAttribute(PRODUCT, product);
+            List<ProductReview> productReviews =  productReviewDao.getProductReviews(id);
+            request.setAttribute("productReviews", productReviews);
             request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
         } catch (ProductNotFoundException | NumberFormatException exception) {
             response.sendError(404, "Product not found");
