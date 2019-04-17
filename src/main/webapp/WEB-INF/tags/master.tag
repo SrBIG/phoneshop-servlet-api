@@ -19,6 +19,7 @@
         PhoneShop
     </a>
     <jsp:include page="/WEB-INF/fragments/minicart.jsp"/>
+    <a href="${pageContext.servletContext.contextPath}/productsReviewsModeration"> Reviews Moderation </a>
 </header>
 <main>
     <jsp:doBody/>

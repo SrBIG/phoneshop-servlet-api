@@ -50,7 +50,7 @@ public class ProductDetailsPageServlet extends HttpServlet {
             Product product = productDao.getProduct(id);
             addToRecentlyViewed(request, product);
             request.setAttribute(PRODUCT, product);
-            List<ProductReview> productReviews =  productReviewDao.getProductReviews(id);
+            List<ProductReview> productReviews =  productReviewDao.getApproveProductReviews(id);
             request.setAttribute("productReviews", productReviews);
             request.getRequestDispatcher("/WEB-INF/pages/productDetails.jsp").forward(request, response);
         } catch (ProductNotFoundException | NumberFormatException exception) {

@@ -5,5 +5,10 @@ import java.util.List;
 public interface ProductReviewDao {
     void addProductReview(ProductReview productReview);
 
-    List<ProductReview> getProductReviews(long productId);
+    List<ProductReview> getApproveProductReviews(long productId);
+
+    List<ProductReview> getAllProductsReviews();
+
+    void approve(long id);
 }
+
