@@ -3,7 +3,6 @@ package com.es.phoneshop.model.cart;
 import com.es.phoneshop.model.cart.exception.OutOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
-import com.es.phoneshop.model.product.ProductDao;
 import com.es.phoneshop.model.product.exception.ProductNotFoundException;
 
 import java.io.Serializable;
@@ -13,16 +12,14 @@ import java.util.List;
 import java.util.Optional;
 
 public class Cart implements Serializable {
-    private static final long serialVersionUID = 7265526492135721028L;
+    private static final long serialVersionUID = -632225929954072429L;
     private List<CartItem> cartItems;
     private BigDecimal totalPrice;
     private int totalQuantity;
-    private ProductDao productDao;
 
     public Cart() {
         cartItems = new ArrayList<>();
         totalPrice = new BigDecimal("0");
-        productDao = ArrayListProductDao.getInstance();
     }
 
     public void addItem(Product product, int quantity) throws OutOfStockException {
@@ -74,7 +71,7 @@ public class Cart implements Serializable {
     private void checkStock(Product product, int quantity) throws OutOfStockException {
         try {
             long productId = product.getId().longValue();
-            product = productDao.getProduct(productId);
+            product = ArrayListProductDao.getInstance().getProduct(productId);
         } catch (ProductNotFoundException e) {
             throw new OutOfStockException("Not enough stock!");
         }

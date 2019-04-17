@@ -2,7 +2,7 @@ package com.es.phoneshop.model.recentlyViewed;
 
 import com.es.phoneshop.model.product.Product;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,13 +31,12 @@ public class RecentlyViewedServiceImpl implements RecentlyViewedService {
             throw new IllegalArgumentException();
         }
         if (Objects.isNull(recentlyViewed)) {
-            recentlyViewed = new ArrayList<>();
+            recentlyViewed = new LinkedList<>();
         }
         recentlyViewed.remove(product);
-        recentlyViewed.add(BEGIN, product);
-        if (recentlyViewed.size() >= MAX_SIZE) {
-            List<Product> recentlyViewedToDelete = recentlyViewed.subList(MAX_SIZE, recentlyViewed.size());
-            recentlyViewed.removeAll(recentlyViewedToDelete);
+        ((LinkedList<Product>) recentlyViewed).addFirst(product);
+        while (recentlyViewed.size() > MAX_SIZE) {
+            ((LinkedList<Product>) recentlyViewed).removeLast();
         }
         return recentlyViewed;
     }
