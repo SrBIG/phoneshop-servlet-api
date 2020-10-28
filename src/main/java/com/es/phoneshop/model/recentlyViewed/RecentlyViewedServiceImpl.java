@@ -33,7 +33,7 @@ public class RecentlyViewedServiceImpl implements RecentlyViewedService {
         if (Objects.isNull(recentlyViewed)) {
             recentlyViewed = new LinkedList<>();
         }
-        recentlyViewed.remove(product);
+        recentlyViewed.removeIf(recentlyViewedProduct -> recentlyViewedProduct.getId().equals(product.getId()));
         ((LinkedList<Product>) recentlyViewed).addFirst(product);
         while (recentlyViewed.size() > MAX_SIZE) {
             ((LinkedList<Product>) recentlyViewed).removeLast();

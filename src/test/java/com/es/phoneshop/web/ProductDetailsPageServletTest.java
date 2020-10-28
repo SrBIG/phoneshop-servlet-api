@@ -6,6 +6,8 @@ import com.es.phoneshop.model.cart.exception.OutOfStockException;
 import com.es.phoneshop.model.product.ArrayListProductDao;
 import com.es.phoneshop.model.product.Product;
 import com.es.phoneshop.model.product.exception.ProductNotFoundException;
+import com.es.phoneshop.model.productReview.ProductReview;
+import com.es.phoneshop.model.productReview.ProductReviewDao;
 import com.es.phoneshop.model.recentlyViewed.RecentlyViewedServiceImpl;
 import com.es.phoneshop.web.page.ProductDetailsPageServlet;
 import org.junit.Before;
@@ -48,6 +50,11 @@ public class ProductDetailsPageServletTest {
     private CartService cartService;
     @Mock
     private Cart cart;
+    @Mock
+    private ProductReviewDao productReviewDao;
+    @Mock
+    private List<ProductReview> productReviews;
+
 
     private String quantityStr = "1";
     private int quantity = Integer.valueOf(quantityStr);
@@ -65,6 +72,8 @@ public class ProductDetailsPageServletTest {
         when(cartService.getCart(request)).thenReturn(cart);
         when(request.getParameter(ProductDetailsPageServlet.QUANTITY)).thenReturn(quantityStr);
         when(recentlyViewedService.add(anyList(), any(Product.class))).thenReturn(recentlyViewedProducts);
+
+        when(productReviewDao.getApproveProductReviews(id)).thenReturn(productReviews);
     }
 
     @Test
